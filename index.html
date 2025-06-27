@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ibsds - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom CSS for animations and effects */
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #3b82f6;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .experience-card:hover {
+            transform: translateX(5px);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-white shadow-md z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="#home" class="flex items-center">
+                        <img src="https://ibsds.github.io/photos/ib_logos3.png" alt="Logo" class="h-10 w-auto">
+                        <span class="ml-2 text-xl font-bold text-blue-600">ibsds</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600">Home</a>
+                    <a href="#about" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600">About</a>
+                    <a href="#experience" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600">Experience</a>
+                    <a href="#contact" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600">Contact</a>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="menu-btn" class="text-gray-500 hover:text-blue-600 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100">Home</a>
+                <a href="#about" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100">About</a>
+                <a href="#experience" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100">Experience</a>
+                <a href="#contact" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="pt-24 pb-16 md:pt-32 md:pb-24 bg-gradient-to-r from-blue-50 to-indigo-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="md:flex items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0 fade-in">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Hello, I'm ibsds</h1>
+                    <h2 class="text-2xl md:text-3xl font-semibold text-blue-600 mb-6">Network & Telecommunications Specialist</h2>
+                    <p class="text-lg text-gray-600 mb-8">I specialize in network and telecommunication systems with over 20 years of experience in managing and optimizing fiber optic and Transport networks.</p>
+                    <div class="flex space-x-4">
+                        <a href="#contact" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300">Contact Me</a>
+                        <a href="#experience" class="border border-blue-600 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-lg font-medium transition duration-300">My Experience</a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center fade-in">
+                    <div class="relative">
+                        <div class="absolute -inset-4 bg-blue-100 rounded-full opacity-75 blur-lg"></div>
+                        <img src="https://ibsds.github.io/photos/ib_logos3.png" alt="Profile" class="relative w-64 h-64 rounded-full object-cover border-4 border-white shadow-lg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">About Me</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Network Field Technician with over 20 years of experience in managing and optimizing fiber optic and Transport networks.</p>
+            </div>
+            
+            <div class="md:flex">
+                <div class="md:w-1/2 mb-10 md:mb-0 md:pr-8 fade-in">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-6">My Expertise</h3>
+                    <p class="text-gray-600 mb-6">Track record in enhancing network performance and reliability, achieving a 25% reduction in network downtime and enhancing customer satisfaction scores by 15%.</p>
+                    <p class="text-gray-600 mb-6">Adept in complex problem-solving, project management, and delivering results under pressure.</p>
+                    <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-600">
+                        <p class="text-blue-800 font-medium">"Success in network management isn't just about technology—it's about understanding how systems connect people and businesses."</p>
+                    </div>
+                </div>
+                
+                <div class="md:w-1/2 fade-in">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-6">My Skills</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="skill-card bg-white p-6 rounded-lg shadow-md border border-gray-100 transition duration-300">
+                            <div class="text-blue-600 mb-3">
+                                <i class="fas fa-lightbulb text-3xl"></i>
+                            </div>
+                            <h4 class="font-semibold text-lg mb-2">Problem Solving & Analysis</h4>
+                            <p class="text-gray-600 text-sm">Expert in diagnosing and resolving complex network issues efficiently.</p>
+                        </div>
+                        <div class="skill-card bg-white p-6 rounded-lg shadow-md border border-gray-100 transition duration-300">
+                            <div class="text-blue-600 mb-3">
+                                <i class="fas fa-clock text-3xl"></i>
+                            </div>
+                            <h4 class="font-semibold text-lg mb-2">Delivering Results on Time</h4>
+                            <p class="text-gray-600 text-sm">Consistently meet project deadlines with quality results.</p>
+                        </div>
+                        <div class="skill-card bg-white p-6 rounded-lg shadow-md border border-gray-100 transition duration-300">
+                            <div class="text-blue-600 mb-3">
+                                <i class="fas fa-network-wired text-3xl"></i>
+                            </div>
+                            <h4 class="font-semibold text-lg mb-2">Fiber Optic & Copper Network</h4>
+                            <p class="text-gray-600 text-sm">Extensive experience in installation and maintenance.</p>
+                        </div>
+                        <div class="skill-card bg-white p-6 rounded-lg shadow-md border border-gray-100 transition duration-300">
+                            <div class="text-blue-600 mb-3">
+                                <i class="fas fa-satellite-dish text-3xl"></i>
+                            </div>
+                            <h4 class="font-semibold text-lg mb-2">Telecom IP Systems</h4>
+                            <p class="text-gray-600 text-sm">Proficient in optical fiber technologies and IP systems.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="py-16 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Work Experience</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Over two decades of hands-on experience in network and telecommunications.</p>
+            </div>
+            
+            <div class="relative">
+                <!-- Timeline line -->
+                <div class="hidden md:block absolute left-1/2 h-full w-1 bg-blue-200 transform -translate-x-1/2"></div>
+                
+                <!-- Timeline items -->
+                <div class="space-y-8">
+                    <!-- Experience 1 -->
+                    <div class="experience-card fade-in md:flex justify-center items-center w-full">
+                        <div class="md:w-1/2 md:pr-8 md:text-right mb-4 md:mb-0">
+                            <h3 class="text-xl font-semibold text-blue-600">Transport Network Engineer</h3>
+                            <p class="text-gray-700 font-medium">NOVA S.A., Athens, Greece</p>
+                            <p class="text-gray-500">Apr 2023 – Mar 2024</p>
+                        </div>
+                        <div class="hidden md:flex justify-center items-center w-16 h-16 rounded-full bg-blue-100 border-4 border-white shadow-md mx-4 z-10">
+                            <i class="fas fa-briefcase text-blue-600 text-xl"></i>
+                        </div>
+                        <div class="md:w-1/2 md:pl-8 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                            <ul class="list-disc pl-5 text-gray-600 space-y-2">
+                                <li>Led the expansion of the fiber optic (FO) network and customer connections</li>
+                                <li>Managed CRM work orders for network resource allocation</li>
+                                <li>Ensured timely project tracking of FO network expansions & HLD, LLD</li>
+                                <li>Administered FO network inventory</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Experience 2 -->
+                    <div class="experience-card fade-in md:flex justify-center items-center w-full flex-row-reverse">
+                        <div class="md:w-1/2 md:pl-8 md:text-left mb-4 md:mb-0">
+                            <h3 class="text-xl font-semibold text-blue-600">Fixed Delivery Technician</h3>
+                            <p class="text-gray-700 font-medium">Vodafone S.A. (Contract, Outsourcing)</p>
+                            <p class="text-gray-500">Oct 2020 – Apr 2023</p>
+                        </div>
+                        <div class="hidden md:flex justify-center items-center w-16 h-16 rounded-full bg-blue-100 border-4 border-white shadow-md mx-4 z-10">
+                            <i class="fas fa-wifi text-blue-600 text-xl"></i>
+                        </div>
+                        <div class="md:w-1/2 md:pr-8 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                            <ul class="list-disc pl-5 text-gray-600 space-y-2">
+                                <li>Worked on the Public Sector Network "Syzefxis II" Project</li>
+                                <li>Responsible for Fixed Telephony and Converged Telephony & Internet Services activation</li>
+                                <li>Direct contact with Business Customers and field technicians</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Experience 3 -->
+                    <div class="experience-card fade-in md:flex justify-center items-center w-full">
+                        <div class="md:w-1/2 md:pr-8 md:text-right mb-4 md:mb-0">
+                            <h3 class="text-xl font-semibold text-blue-600">Network Field Maintenance Operations Technician</h3>
+                            <p class="text-gray-700 font-medium">Wind S.A., L. Athinon, Greece</p>
+                            <p class="text-gray-500">Nov 2016 – Nov 2019</p>
+                        </div>
+                        <div class="hidden md:flex justify-center items-center w-16 h-16 rounded-full bg-blue-100 border-4 border-white shadow-md mx-4 z-10">
+                            <i class="fas fa-server text-blue-600 text-xl"></i>
+                        </div>
+                        <div class="md:w-1/2 md:pl-8 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                            <ul class="list-disc pl-5 text-gray-600 space-y-2">
+                                <li>Supported Field and Fiber Optic Operations</li>
+                                <li>Responsible for telecom & IP systems and fiber optic failures at Wind network</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Experience 4 -->
+                    <div class="experience-card fade-in md:flex justify-center items-center w-full flex-row-reverse">
+                        <div class="md:w-1/2 md:pl-8 md:text-left mb-4 md:mb-0">
+                            <h3 class="text-xl font-semibold text-blue-600">Field Network Technician</h3>
+                            <p class="text-gray-700 font-medium">Neurosoft SA, N. Irakleio, Greece</p>
+                            <p class="text-gray-500">Jul 2014 – Nov 2016</p>
+                        </div>
+                        <div class="hidden md:flex justify-center items-center w-16 h-16 rounded-full bg-blue-100 border-4 border-white shadow-md mx-4 z-10">
+                            <i class="fas fa-ethernet text-blue-600 text-xl"></i>
+                        </div>
+                        <div class="md:w-1/2 md:pr-8 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                            <ul class="list-disc pl-5 text-gray-600 space-y-2">
+                                <li>Installer and commissioner technician for Telecom Systems</li>
+                                <li>Responsible for Optical systems installation, commissioning, and troubleshooting</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Experience 5 -->
+                    <div class="experience-card fade-in md:flex justify-center items-center w-full">
+                        <div class="md:w-1/2 md:pr-8 md:text-right mb-4 md:mb-0">
+                            <h3 class="text-xl font-semibold text-blue-600">Field Network Technician</h3>
+                            <p class="text-gray-700 font-medium">Wavetel SA, Piraeus, Greece</p>
+                            <p class="text-gray-500">Nov 2013 – Jul 2014</p>
+                        </div>
+                        <div class="hidden md:flex justify-center items-center w-16 h-16 rounded-full bg-blue-100 border-4 border-white shadow-md mx-4 z-10">
+                            <i class="fas fa-satellite text-blue-600 text-xl"></i>
+                        </div>
+                        <div class="md:w-1/2 md:pl-8 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                            <ul class="list-disc pl-5 text-gray-600 space-y-2">
+                                <li>Installer and commissioner technician for Telecom Systems (Nokia, Huawei)</li>
+                                <li>Responsible for Optical systems installation, commissioning, and troubleshooting</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Experience 6 -->
+                    <div class="experience-card fade-in md:flex justify-center items-center w-full flex-row-reverse">
+                        <div class="md:w-1/2 md:pl-8 md:text-left mb-4 md:mb-0">
+                            <h3 class="text-xl font-semibold text-blue-600">Field Network Technician</h3>
+                            <p class="text-gray-700 font-medium">All About Telecom Ltd, Athens, Greece</p>
+                            <p class="text-gray-500">Nov 2006 – Nov 2013</p>
+                        </div>
+                        <div class="hidden md:flex justify-center items-center w-16 h-16 rounded-full bg-blue-100 border-4 border-white shadow-md mx-4 z-10">
+                            <i class="fas fa-tower-cell text-blue-600 text-xl"></i>
+                        </div>
+                        <div class="md:w-1/2 md:pr-8 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                            <ul class="list-disc pl-5 text-gray-600 space-y-2">
+                                <li>Installer and commissioner technician for Point-to-Point Microwave telecom Systems</li>
+                                <li>Responsible for Optical systems installation, commissioning, and troubleshooting</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Experience 7 -->
+                    <div class="experience-card fade-in md:flex justify-center items-center w-full">
+                        <div class="md:w-1/2 md:pr-8 md:text-right mb-4 md:mb-0">
+                            <h3 class="text-xl font-semibold text-blue-600">Microwave and Network Technician</h3>
+                            <p class="text-gray-700 font-medium">Hitech SNT S.A., N. Ionia, Greece</p>
+                            <p class="text-gray-500">Oct 2004 – Nov 2006</p>
+                        </div>
+                        <div class="hidden md:flex justify-center items-center w-16 h-16 rounded-full bg-blue-100 border-4 border-white shadow-md mx-4 z-10">
+                            <i class="fas fa-broadcast-tower text-blue-600 text-xl"></i>
+                        </div>
+                        <div class="md:w-1/2 md:pl-8 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                            <ul class="list-disc pl-5 text-gray-600 space-y-2">
+                                <li>Installer and commissioner technician on microwave network and telecom systems</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Contact Me</h2>
+                <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Feel free to reach out if you have any questions or opportunities!</p>
+            </div>
+            
+            <div class="md:flex">
+                <div class="md:w-1/2 mb-10 md:mb-0 md:pr-8 fade-in">
+                    <form id="contact-form" class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                            <input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                            <textarea id="message" name="message" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300 flex items-center justify-center">
+                            <i class="fas fa-paper-plane mr-2"></i> Send Message
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="md:w-1/2 md:pl-8 fade-in">
+                    <div class="bg-gray-50 p-8 rounded-lg h-full">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-6">Connect With Me</h3>
+                        <div class="space-y-6">
+                            <div class="flex items-center">
+                                <div class="bg-blue-100 p-3 rounded-full mr-4">
+                                    <i class="fas fa-envelope text-blue-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Email</p>
+                                    <p class="font-medium text-gray-800">contact@ibsds.com</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="bg-blue-100 p-3 rounded-full mr-4">
+                                    <i class="fab fa-linkedin text-blue-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">LinkedIn</p>
+                                    <a href="https://www.linkedin.com/in/your-linkedin" class="font-medium text-blue-600 hover:underline">linkedin.com/in/your-linkedin</a>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="bg-blue-100 p-3 rounded-full mr-4">
+                                    <i class="fas fa-certificate text-blue-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Credly</p>
+                                    <a href="https://www.credly.com/users/xxxxx-user" class="font-medium text-blue-600 hover:underline">credly.com/users/xxxxx-user</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-10 pt-6 border-t border-gray-200">
+                            <h4 class="text-lg font-medium text-gray-800 mb-4">Let's Work Together</h4>
+                            <p class="text-gray-600">I'm always open to discussing new projects, creative ideas or opportunities to be part of your vision.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="md:flex md:items-center md:justify-between">
+                <div class="flex justify-center md:justify-start items-center mb-6 md:mb-0">
+                    <img src="https://ibsds.github.io/photos/ib_logos3.png" alt="Logo" class="h-10 w-auto">
+                    <span class="ml-2 text-xl font-bold text-white">ibsds</span>
+                </div>
+                <div class="flex justify-center md:justify-end space-x-6">
+                    <a href="https://www.linkedin.com/in/your-linkedin" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-linkedin text-2xl"></i>
+                    </a>
+                    <a href="https://www.credly.com/users/xxxxx-user" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-certificate text-2xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="mt-8 text-center md:text-left">
+                <p class="text-gray-400">© 2025 ibsds. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.getElementById('mobile-menu').classList.add('hidden');
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                window.scrollTo({
+                    top: targetElement.offsetTop - 70,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Form submission
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            // Here you would typically send the form data to a server
+            // For this example, we'll just show an alert
+            alert(`Thank you, ${name}! Your message has been sent. I'll get back to you soon.`);
+            
+            // Reset form
+            this.reset();
+        });
+
+        // Scroll animation
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const fadeInOnScroll = () => {
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementTop < windowHeight - 100) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        };
+        
+        // Run once on page load
+        fadeInOnScroll();
+        
+        // Run on scroll
+        window.addEventListener('scroll', fadeInOnScroll);
+    </script>
+</body>
+</html>
