@@ -1,836 +1,1058 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ibsds - Network & Telecommunications Specialist Portfolio</title>
-    <meta name="description" content="Network & Telecommunications Specialist with over 20 years of experience in fiber optic and transport networks">
-    <meta name="keywords" content="network technician, telecommunications, fiber optic, transport networks, NOVA, Vodafone">
-    <meta name="author" content="ibsds">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" />
+  <title>OSI Layer Quiz Game</title>
+  <style>
+    /* --- MODIFIED: Global Space/Cosmos Theme --- */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #f0f0f5;
+      /* MODIFIED: Body now has the space gradient background */
+      background: linear-gradient(to bottom, #0a0e27 0%, #1a1a3e 50%, #16213e 100%);
+      overflow-x: hidden;
+    }
+
+    /* NEW: Animated Starfield Background is now global */
+    body::before {
+      content: '';
+      position: fixed; /* Use fixed to cover the whole viewport */
+      top: 0;
+      left: 0;
+      width: 200%;
+      height: 200%;
+      background-image: 
+        radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 50px 50px, #fff, transparent),
+        radial-gradient(1px 1px at 80px 10px, rgba(255,255,255,0.6), transparent),
+        radial-gradient(2px 2px at 130px 80px, #ddd, transparent);
+      background-repeat: repeat;
+      background-size: 200px 200px;
+      animation: starsMove 120s linear infinite;
+      z-index: -1;
+    }
+    @keyframes starsMove {
+      from { transform: translateX(0); }
+      to { transform: translateX(-200px); }
+    }
+
+    /* --- Start Page Specific Styles --- */
+    #start-page-container {
+      position: relative;
+      background: transparent; /* Keep it transparent */
+      animation: pageFadeIn 1s ease-out;
+      border: none;
+      box-shadow: none;
+    }
+    @keyframes pageFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Override title styles for the start page */
+    #start-page-container .game-title {
+      color: #ffffff; /* Bright white */
+      text-shadow: 0 0 10px #ffffff, 0 0 20px #6495ed, 0 0 30px #6495ed;
+      animation: titleGlow 3s ease-in-out infinite alternate;
+    }
+    @keyframes titleGlow {
+      from { text-shadow: 0 0 10px #ffffff, 0 0 20px #6495ed, 0 0 30px #6495ed; }
+      to { text-shadow: 0 0 15px #ffffff, 0 0 25px #87ceeb, 0 0 35px #87ceeb; }
+    }
     
-    <!-- Open Graph Tags -->
-    <meta property="og:title" content="ibsds - Network & Telecommunications Specialist">
-    <meta property="og:description" content="Network & Telecommunications Specialist with over 20 years of experience">
-    <meta property="og:image" content="https://ibsds.github.io/photos/ib_logos3.png">
-    <meta property="og:url" content="https://your-website-url.com">
-    <meta property="og:type" content="website">
+    /* Override paragraph text color */
+    #start-page-container p {
+      color: #b0c4de; /* Light steel blue */
+      text-shadow: 0 0 5px #b0c4de;
+    }
+
+    /* Override Visual Layer Stack for Glass Panel Effect */
+    #start-page-container #layer-visual-stack .visual-layer {
+      background: rgba(255, 255, 255, 0.05); /* Very transparent white */
+      border: 1px solid rgba(100, 149, 237, 0.3);
+      color: #e6e6fa; /* Lavender */
+      box-shadow: 0 0 10px rgba(100, 149, 237, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.1);
+      text-shadow: 0 0 3px #e6e6fa;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Override Start Button for Nebula Effect */
+    #start-page-container #startGameBtn {
+      background: linear-gradient(45deg, #4b0082, #6495ed);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 15px rgba(100, 149, 237, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.2);
+      animation: buttonNebulaPulse 2s ease-in-out infinite;
+    }
+    #start-page-container #startGameBtn:hover {
+      background: linear-gradient(45deg, #6a0dad, #87ceeb);
+      box-shadow: 0 0 20px rgba(100, 149, 237, 0.7), inset 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+    @keyframes buttonNebulaPulse {
+      0%, 100% { box-shadow: 0 0 15px rgba(100, 149, 237, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.2); }
+      50% { box-shadow: 0 0 25px rgba(100, 149, 237, 0.7), inset 0 0 15px rgba(255, 255, 255, 0.3); }
+    }
+
+
+    /* --- Main Game Styles --- */
+    .game-container {
+      width: 90%;
+      max-width: 600px;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+    .game-title {
+      text-align: center;
+      font-size: 2.4rem;
+      font-weight: 900;
+      margin-bottom: 25px;
+      color: #8a8aff;
+      text-shadow: 0 0 8px #8a8affaa;
+      user-select: none;
+    }
+    #questionNumber {
+      font-weight: 600;
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      color: #a0a0ff;
+      /* CORRECTED: Added text-align: center */
+      text-align: center;
+    }
+    #question {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      line-height: 1.3;
+      /* CORRECTED: Added text-align: center */
+      text-align: center;
+    }
+    .OSI-Layers {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 25px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+    .OSI-Layers li {
+      background: #2e2e4e;
+      color: #d7d7ff;
+      padding: 14px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      user-select: none;
+      flex: 1 1 45%;
+      max-width: 250px;
+      text-align: center;
+      font-weight: 600;
+      transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+    }
+    .OSI-Layers li:hover {
+      background-color: #4a4ad8;
+      transform: scale(1.05);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+    }
+    .OSI-Layers li.selected {
+      background: #444444;
+      color: #ddd;
+      font-weight: 700;
+      border: 2px solid #bbbbbb;
+      box-shadow: 0 0 6px #999999aa;
+      transform: scale(0.97);
+      transition: transform 0.2s ease;
+      pointer-events: none;
+    }
+    .OSI-Layers li.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+      cursor: default;
+    }
+    #feedback {
+      font-size: 1.1rem;
+      min-height: 1.5em;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: 600;
+      border-radius: 6px;
+      padding: 8px 12px;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+    .correct-feedback {
+      background-color: #28a745;
+      color: #e6ffe6;
+      box-shadow: 0 0 10px #28a745aa;
+    }
+    .incorrect-feedback {
+      background-color: #dc3545;
+      color: #ffd6d6;
+      box-shadow: 0 0 10px #dc3545aa;
+    }
+    /* Animations */
+    @keyframes correctFlash {
+      0%, 100% { background-color: #28a745; }
+      50% { background-color: #3ade60; }
+    }
+    @keyframes incorrectFlash {
+      0%, 100% { background-color: #dc3545; }
+      50% { background-color: #e85c6f; }
+    }
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    .correct-feedback.animated {
+      animation: correctFlash 0.8s ease-in-out;
+    }
+    .incorrect-feedback.animated {
+      animation: incorrectFlash 0.8s ease-in-out, shake 0.6s ease-in-out;
+    }
+    .OSI-Layers li.correct-answer {
+      border: 3px solid #ffc107;
+      box-shadow: 0 0 15px #ffc107;
+    }
+    #score, #highScore {
+      font-weight: 600;
+      font-size: 1rem;
+      color: #b0b0ff;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    #timer {
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 8px;
+      color: #cfcfff;
+    }
+    #timerProgress {
+      height: 12px;
+      background: #5b5bc8;
+      border-radius: 8px;
+      transition: width 0.2s ease;
+    }
+    #timerBar {
+      background: #2e2e4e;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 25px;
+    }
     
-    <!-- Preconnect for external resources -->
-    <link rel="preconnect" href="https://cdn.tailwindcss.com">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    /* --- NEW: Game Control Buttons Styles --- */
+    .game-controls-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    #restartBtn, #startGameBtn {
+      padding: 12px 24px; /* Adjusted padding */
+      background: #5b5bc8;
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 12px rgba(91, 91, 200, 0.6);
+      transition: background-color 0.3s ease;
+    }
+    #restartBtn:hover {
+      background: #4545a8;
+    }
+    #startGameBtn {
+      display: block; /* Keep this for the start page */
+      width: 180px;
+      margin: 0 auto;
+    }
+
+    #backToDifficultyBtn {
+      padding: 12px 24px;
+      background: transparent;
+      border: 2px solid #5b5bc8;
+      border-radius: 10px;
+      color: #5b5bc8;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    #backToDifficultyBtn:hover {
+      background: #5b5bc8;
+      color: #fff;
+    }
+
+    .OSI-Layers li:focus {
+      outline: 3px solid #8a8aff;
+      outline-offset: 3px;
+    }
+    .new-high-score {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #ffcd38;
+      text-shadow: 0 0 8px #ffcd38;
+      animation: pulse 1s infinite;
+    }
+    .confetti-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 999;
+      display: none;
+    }
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #f0f; /* This is a placeholder, JS sets it */
+      animation: confettiFall linear;
+      animation-fill-mode: forwards; /* FIX: Keep the final state of the animation */
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+    /* Progress dots styles */
+    .progress-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 15px;
+      gap: 8px;
+    }
+    .progress-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #3c3c3c;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+    .progress-dot.active {
+      background-color: #5b5bc8;
+      transform: scale(1.2);
+    }
+    .progress-dot.completed {
+      background-color: #28a745;
+    }
+    .progress-dot.incorrect {
+      background-color: #dc3545;
+    }
+    .progress-legend {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      font-size: 0.8rem;
+      color: #a0a0ff;
+      margin-bottom: 20px;
+    }
+    .progress-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
     
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* Custom CSS for animations and effects */
-        .nav-link {
-            position: relative;
-        }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -2px;
-            left: 0;
-            background-color: #3b82f6;
-            transition: width 0.3s ease;
-        }
-        .nav-link:hover::after {
-            width: 100%;
-        }
-        .skill-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-        .experience-card:hover {
-            transform: translateX(5px);
-        }
-        .fade-in {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border-width: 0;
-        }
-    </style>
+    /* Media queries for mobile devices */
+    @media (max-width: 480px) {
+      .game-container {
+        width: 95%;
+        padding: 0.8rem;
+      }
+      
+      .game-title {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+      }
+      
+      #question {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+      }
+      
+      .OSI-Layers li {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+        flex: 1 1 100%; /* Make buttons full-width */
+        max-width: 100%;
+      }
+      
+      .progress-legend {
+        font-size: 0.7rem;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      
+      #feedback {
+        font-size: 1rem;
+      }
+      
+      #score, #highScore {
+        font-size: 0.9rem;
+      }
+      
+      /* MODIFIED: Button styles for mobile */
+      .game-controls-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+      }
+      #restartBtn, #backToDifficultyBtn, #startGameBtn {
+        width: 160px;
+        padding: 10px 0;
+        font-size: 1rem;
+      }
+    }
+    
+    /* Extra small screens */
+    @media (max-width: 360px) {
+      .game-title {
+        font-size: 1.6rem;
+      }
+      
+      #question {
+        font-size: 1rem;
+      }
+      
+      .OSI-Layers li {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+      }
+      
+      .progress-legend {
+        font-size: 0.65rem;
+      }
+    }
+
+    /* Class to hide elements */
+    .hidden {
+      display: none;
+    }
+
+    /* --- Start Page Specific Styles (Originals, some now overridden) --- */
+
+    /* RESTORED: Visual Layer Stack (without animation) */
+    #layer-visual-stack {
+      display: flex;
+      flex-direction: column-reverse; /* Layer 7 at the top */
+      align-items: center;
+      gap: 4px;
+      margin: 20px 0 30px 0;
+      perspective: 1000px;
+    }
+    .visual-layer {
+      width: 280px;
+      padding: 10px;
+      background: rgba(46, 46, 78, 0.6);
+      border: 1px solid rgba(138, 138, 255, 0.3);
+      border-radius: 6px;
+      text-align: center;
+      font-weight: 600;
+      color: #d7d7ff;
+      backdrop-filter: blur(5px);
+    }
+
+    /* --- Difficulty Selection Styles --- */
+    .difficulty-options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .difficulty-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 150px;
+      height: 150px;
+      background: linear-gradient(45deg, #2e2e4e, #4a4ad8);
+      border: 2px solid rgba(138, 138, 255, 0.3);
+      border-radius: 15px;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .difficulty-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+      background: linear-gradient(45deg, #4a4ad8, #6a6af8);
+    }
+
+    .difficulty-title {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .difficulty-desc {
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+
+    .back-btn {
+      display: block;
+      width: 180px;
+      margin: 20px auto 0;
+      padding: 12px 0;
+      background: transparent;
+      border: 2px solid #5b5bc8;
+      border-radius: 10px;
+      color: #5b5bc8;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: #5b5bc8;
+      color: #fff;
+    }
+
+    @media (max-width: 480px) {
+      .difficulty-options {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .difficulty-btn {
+        width: 200px;
+        height: 100px;
+        flex-direction: row;
+      }
+      
+      .difficulty-title {
+        font-size: 1.2rem;
+        margin-right: 15px;
+        margin-bottom: 0;
+      }
+    }
+  </style>
 </head>
-<body class="bg-gray-50 font-sans text-gray-800">
-    <!-- Skip to content link for accessibility -->
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50">Skip to main content</a>
+<body>
 
-    <!-- Navigation -->
-    <nav class="fixed w-full bg-white shadow-md z-50">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="#home" class="flex items-center">
-                        <img src="https://ibsds.github.io/photos/ib_logos3.png" alt="Logo" class="h-10 w-auto">
-                        <span class="ml-2 text-xl font-bold text-blue-600">ibsds</span>
-                    </a>
-                </div>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#home" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600">Home</a>
-                    <a href="#about" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600">About</a>
-                    <a href="#experience" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600">Experience</a>
-                    <a href="#projects" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600">Projects</a>
-                    <a href="#testimonials" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600">Testimonials</a>
-                    <a href="#certifications" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600">Certifications</a>
-                    <a href="#contact" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600">Contact</a>
-                </div>
-                <div class="md:hidden flex items-center">
-                    <button id="menu-btn" class="text-gray-500 hover:text-blue-600 focus:outline-none" aria-label="Toggle navigation menu">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <!-- Mobile menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#home" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100">Home</a>
-                <a href="#about" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100">About</a>
-                <a href="#experience" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100">Experience</a>
-                <a href="#projects" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100">Projects</a>
-                <a href="#testimonials" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100">Testimonials</a>
-                <a href="#certifications" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100">Certifications</a>
-                <a href="#contact" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100">Contact</a>
-            </div>
-        </div>
-    </nav>
+  <!-- Start Page Container -->
+  <div id="start-page-container" class="game-container">
+    <h1 class="game-title">OSI Layer Quiz Game</h1>
+    <p style="text-align: center; font-size: 1.1rem; color: #b0c4de; margin-bottom: 30px;">
+      Journey through the 7 layers of the network.
+    </p>
+    
+    <!-- Visual representation of the layers -->
+    <div id="layer-visual-stack">
+      <div class="visual-layer">Layer 7 - Application</div>
+      <div class="visual-layer">Layer 6 - Presentation</div>
+      <div class="visual-layer">Layer 5 - Session</div>
+      <div class="visual-layer">Layer 4 - Transport</div>
+      <div class="visual-layer">Layer 3 - Network</div>
+      <div class="visual-layer">Layer 2 - Data Link</div>
+      <div class="visual-layer">Layer 1 - Physical</div>
+    </div>
 
-    <!-- Hero Section -->
-    <section id="home" class="pt-24 pb-16 md:pt-32 md:pb-24 bg-gradient-to-r from-blue-50 to-indigo-50">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="md:flex items-center">
-                <div class="md:w-1/2 mb-10 md:mb-0 fade-in">
-                    <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Hello, I'm ibsds</h1>
-                    <h2 class="text-2xl md:text-3xl font-semibold text-blue-600 mb-6">Network & Telecommunications Specialist</h2>
-                    <p class="text-lg text-gray-600 mb-8">I specialize in network and telecommunication systems with over 20 years of experience in managing and optimizing fiber optic and Transport networks.</p>
-                    <div class="flex space-x-4">
-                        <a href="#contact" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300">Contact Me</a>
-                        <a href="#experience" class="border border-blue-600 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-lg font-medium transition duration-300">My Experience</a>
-                    </div>
-                </div>
-                <div class="md:w-1/2 flex justify-center fade-in">
-                    <div class="relative">
-                        <div class="absolute -inset-4 bg-blue-100 rounded-full opacity-75 blur-lg"></div>
-                        <img src="https://ibsds.github.io/photos/ib_logos3.png" alt="Profile" loading="lazy" class="relative w-64 h-64 rounded-full object-cover border-4 border-white shadow-lg">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <button id="startGameBtn">Start Game</button>
+  </div>
 
-    <!-- About Section -->
-    <section id="about" class="py-16 bg-white">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 fade-in">
-                <h2 class="text-3xl font-bold text-gray-800 mb-4">About Me</h2>
-                <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
-                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Network Field Technician with over 20 years of experience in managing and optimizing fiber optic and Transport networks.</p>
-            </div>
-            
-            <div class="md:flex">
-                <div class="md:w-1/2 mb-10 md:mb-0 md:pr-8 fade-in">
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-6">My Expertise</h3>
-                    <p class="text-gray-600 mb-6">Track record in enhancing network performance and reliability, achieving a 25% reduction in network downtime and enhancing customer satisfaction scores by 15%.</p>
-                    <p class="text-gray-600 mb-6">Adept in complex problem-solving, project management, and delivering results under pressure.</p>
-                    <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-600">
-                        <p class="text-blue-800 font-medium">"Success in network management isn't just about technology—it's about understanding how systems connect people and businesses."</p>
-                    </div>
-                </div>
-                
-                <div class="md:w-1/2 fade-in">
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-6">My Skills</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div class="skill-card bg-white p-6 rounded-lg shadow-md border border-gray-100 transition duration-300">
-                            <div class="text-blue-600 mb-3">
-                                <i class="fas fa-lightbulb text-3xl"></i>
-                            </div>
-                            <h4 class="font-semibold text-lg mb-2">Problem Solving & Analysis</h4>
-                            <p class="text-gray-600 text-sm">Expert in diagnosing and resolving complex network issues efficiently.</p>
-                        </div>
-                        <div class="skill-card bg-white p-6 rounded-lg shadow-md border border-gray-100 transition duration-300">
-                            <div class="text-blue-600 mb-3">
-                                <i class="fas fa-clock text-3xl"></i>
-                            </div>
-                            <h4 class="font-semibold text-lg mb-2">Delivering Results on Time</h4>
-                            <p class="text-gray-600 text-sm">Consistently meet project deadlines with quality results.</p>
-                        </div>
-                        <div class="skill-card bg-white p-6 rounded-lg shadow-md border border-gray-100 transition duration-300">
-                            <div class="text-blue-600 mb-3">
-                                <i class="fas fa-network-wired text-3xl"></i>
-                            </div>
-                            <h4 class="font-semibold text-lg mb-2">Fiber Optic & Copper Network</h4>
-                            <p class="text-gray-600 text-sm">Extensive experience in installation and maintenance.</p>
-                        </div>
-                        <div class="skill-card bg-white p-6 rounded-lg shadow-md border border-gray-100 transition duration-300">
-                            <div class="text-blue-600 mb-3">
-                                <i class="fas fa-satellite-dish text-3xl"></i>
-                            </div>
-                            <h4 class="font-semibold text-lg mb-2">Telecom IP Systems</h4>
-                            <p class="text-gray-600 text-sm">Proficient in optical fiber technologies and IP systems.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <!-- Difficulty Selection Container -->
+  <div id="difficulty-container" class="game-container hidden">
+    <h1 class="game-title">Select Difficulty</h1>
+    <p style="text-align: center; font-size: 1.1rem; color: #b0c4de; margin-bottom: 30px;">
+      Choose your challenge level:
+    </p>
+    
+    <div class="difficulty-options">
+      <button class="difficulty-btn" data-questions="3">
+        <span class="difficulty-title">Easy</span>
+        <span class="difficulty-desc">3 Questions</span>
+      </button>
+      <button class="difficulty-btn" data-questions="6">
+        <span class="difficulty-title">Medium</span>
+        <span class="difficulty-desc">6 Questions</span>
+      </button>
+      <button class="difficulty-btn" data-questions="11">
+        <span class="difficulty-title">Hard</span>
+        <span class="difficulty-desc">11 Questions</span>
+      </button>
+    </div>
+    
+    <button id="backToStartBtn" class="back-btn">Back to Start</button>
+  </div>
 
-    <!-- Experience Section -->
-    <section id="experience" class="py-16 bg-gray-50">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 fade-in">
-                <h2 class="text-3xl font-bold text-gray-800 mb-4">Work Experience</h2>
-                <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
-                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Over two decades of hands-on experience in network and telecommunications.</p>
-            </div>
-            
-            <div class="relative">
-                <!-- Timeline line -->
-                <div class="hidden md:block absolute left-1/2 h-full w-1 bg-blue-200 transform -translate-x-1/2"></div>
-                
-                <!-- Timeline items -->
-                <div class="space-y-8">
-                    <!-- Experience 1 -->
-                    <div class="experience-card fade-in md:flex justify-center items-center w-full">
-                        <div class="md:w-1/2 md:pr-8 md:text-right mb-4 md:mb-0">
-                            <h3 class="text-xl font-semibold text-blue-600">Transport Network Engineer</h3>
-                            <p class="text-gray-700 font-medium">NOVA S.A., Athens, Greece</p>
-                            <p class="text-gray-500">Apr 2023 – Mar 2024</p>
-                        </div>
-                        <div class="hidden md:flex justify-center items-center w-16 h-16 rounded-full bg-blue-100 border-4 border-white shadow-md mx-4 z-10">
-                            <i class="fas fa-briefcase text-blue-600 text-xl"></i>
-                        </div>
-                        <div class="md:w-1/2 md:pl-8 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                            <ul class="list-disc pl-5 text-gray-600 space-y-2">
-                                <li>Led the expansion of the fiber optic (FO) network and customer connections</li>
-                                <li>Managed CRM work orders for network resource allocation</li>
-                                <li>Ensured timely project tracking of FO network expansions & HLD, LLD</li>
-                                <li>Administered FO network inventory</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <!-- Experience 2 -->
-                    <div class="experience-card fade-in md:flex justify-center items-center w-full flex-row-reverse">
-                        <div class="md:w-1/2 md:pl-8 md:text-left mb-4 md:mb-0">
-                            <h3 class="text-xl font-semibold text-blue-600">Fixed Delivery Technician</h3>
-                            <p class="text-gray-700 font-medium">Vodafone S.A. (Contract, Outsourcing)</p>
-                            <p class="text-gray-500">Oct 2020 – Apr 2023</p>
-                        </div>
-                        <div class="hidden md:flex justify-center items-center w-16 h-16 rounded-full bg-blue-100 border-4 border-white shadow-md mx-4 z-10">
-                            <i class="fas fa-wifi text-blue-600 text-xl"></i>
-                        </div>
-                        <div class="md:w-1/2 md:pr-8 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                            <ul class="list-disc pl-5 text-gray-600 space-y-2">
-                                <li>Worked on the Public Sector Network "Syzefxis II" Project</li>
-                                <li>Responsible for Fixed Telephony and Converged Telephony & Internet Services activation</li>
-                                <li>Direct contact with Business Customers and field technicians</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <!-- Experience 3 -->
-                    <div class="experience-card fade-in md:flex justify-center items-center w-full">
-                        <div class="md:w-1/2 md:pr-8 md:text-right mb-4 md:mb-0">
-                            <h3 class="text-xl font-semibold text-blue-600">Network Field Maintenance Operations Technician</h3>
-                            <p class="text-gray-700 font-medium">Wind S.A., L. Athinon, Greece</p>
-                            <p class="text-gray-500">Nov 2016 – Nov 2019</p>
-                        </div>
-                        <div class="hidden md:flex justify-center items-center w-16 h-16 rounded-full bg-blue-100 border-4 border-white shadow-md mx-4 z-10">
-                            <i class="fas fa-server text-blue-600 text-xl"></i>
-                        </div>
-                        <div class="md:w-1/2 md:pl-8 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                            <ul class="list-disc pl-5 text-gray-600 space-y-2">
-                                <li>Supported Field and Fiber Optic Operations</li>
-                                <li>Responsible for telecom & IP systems and fiber optic failures at Wind network</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <!-- Experience 4 -->
-                    <div class="experience-card fade-in md:flex justify-center items-center w-full flex-row-reverse">
-                        <div class="md:w-1/2 md:pl-8 md:text-left mb-4 md:mb-0">
-                            <h3 class="text-xl font-semibold text-blue-600">Field Network Technician</h3>
-                            <p class="text-gray-700 font-medium">Neurosoft SA, N. Irakleio, Greece</p>
-                            <p class="text-gray-500">Jul 2014 – Nov 2016</p>
-                        </div>
-                        <div class="hidden md:flex justify-center items-center w-16 h-16 rounded-full bg-blue-100 border-4 border-white shadow-md mx-4 z-10">
-                            <i class="fas fa-ethernet text-blue-600 text-xl"></i>
-                        </div>
-                        <div class="md:w-1/2 md:pr-8 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                            <ul class="list-disc pl-5 text-gray-600 space-y-2">
-                                <li>Installer and commissioner technician for Telecom Systems</li>
-                                <li>Responsible for Optical systems installation, commissioning, and troubleshooting</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <!-- Experience 5 -->
-                    <div class="experience-card fade-in md:flex justify-center items-center w-full">
-                        <div class="md:w-1/2 md:pr-8 md:text-right mb-4 md:mb-0">
-                            <h3 class="text-xl font-semibold text-blue-600">Field Network Technician</h3>
-                            <p class="text-gray-700 font-medium">Wavetel SA, Piraeus, Greece</p>
-                            <p class="text-gray-500">Nov 2013 – Jul 2014</p>
-                        </div>
-                        <div class="hidden md:flex justify-center items-center w-16 h-16 rounded-full bg-blue-100 border-4 border-white shadow-md mx-4 z-10">
-                            <i class="fas fa-satellite text-blue-600 text-xl"></i>
-                        </div>
-                        <div class="md:w-1/2 md:pl-8 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                            <ul class="list-disc pl-5 text-gray-600 space-y-2">
-                                <li>Installer and commissioner technician for Telecom Systems (Nokia, Huawei)</li>
-                                <li>Responsible for Optical systems installation, commissioning, and troubleshooting</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <!-- Experience 6 -->
-                    <div class="experience-card fade-in md:flex justify-center items-center w-full flex-row-reverse">
-                        <div class="md:w-1/2 md:pl-8 md:text-left mb-4 md:mb-0">
-                            <h3 class="text-xl font-semibold text-blue-600">Field Network Technician</h3>
-                            <p class="text-gray-700 font-medium">All About Telecom Ltd, Athens, Greece</p>
-                            <p class="text-gray-500">Nov 2006 – Nov 2013</p>
-                        </div>
-                        <div class="hidden md:flex justify-center items-center w-16 h-16 rounded-full bg-blue-100 border-4 border-white shadow-md mx-4 z-10">
-                            <i class="fas fa-tower-cell text-blue-600 text-xl"></i>
-                        </div>
-                        <div class="md:w-1/2 md:pr-8 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                            <ul class="list-disc pl-5 text-gray-600 space-y-2">
-                                <li>Installer and commissioner technician for Point-to-Point Microwave telecom Systems</li>
-                                <li>Responsible for Optical systems installation, commissioning, and troubleshooting</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <!-- Experience 7 -->
-                    <div class="experience-card fade-in md:flex justify-center items-center w-full">
-                        <div class="md:w-1/2 md:pr-8 md:text-right mb-4 md:mb-0">
-                            <h3 class="text-xl font-semibold text-blue-600">Microwave and Network Technician</h3>
-                            <p class="text-gray-700 font-medium">Hitech SNT S.A., N. Ionia, Greece</p>
-                            <p class="text-gray-500">Oct 2004 – Nov 2006</p>
-                        </div>
-                        <div class="hidden md:flex justify-center items-center w-16 h-16 rounded-full bg-blue-100 border-4 border-white shadow-md mx-4 z-10">
-                            <i class="fas fa-broadcast-tower text-blue-600 text-xl"></i>
-                        </div>
-                        <div class="md:w-1/2 md:pl-8 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                            <ul class="list-disc pl-5 text-gray-600 space-y-2">
-                                <li>Installer and commissioner technician on microwave network and telecom systems</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <!-- Game Container is now hidden by default -->
+  <div id="game-container" class="game-container hidden">
+    <h1 class="game-title">OSI Layer Quiz Game</h1>
+    <div id="questionNumber"></div>
+    <div class="progress-container" id="progressContainer"></div>
+    <div class="progress-legend" id="progressLegend">
+      <div class="progress-legend-item"><div class="legend-dot" style="background-color: #3c3c3c;"></div>Unanswered</div>
+      <div class="progress-legend-item"><div class="legend-dot" style="background-color: #5b5bc8;"></div>Current</div>
+      <div class="progress-legend-item"><div class="legend-dot" style="background-color: #28a745;"></div>Correct</div>
+      <div class="progress-legend-item"><div class="legend-dot" style="background-color: #dc3545;"></div>Incorrect</div>
+    </div>
+    <div id="question"></div>
+    <ul class="OSI-Layers">
+      <li data-layer="1" tabindex="0">Layer 1 - Physical</li>
+      <li data-layer="2" tabindex="0">Layer 2 - Data Link</li>
+      <li data-layer="3" tabindex="0">Layer 3 - Network</li>
+      <li data-layer="4" tabindex="0">Layer 4 - Transport</li>
+      <li data-layer="5" tabindex="0">Layer 5 - Session</li>
+      <li data-layer="6" tabindex="0">Layer 6 - Presentation</li>
+      <li data-layer="7" tabindex="0">Layer 7 - Application</li>
+    </ul>
+    <div id="feedback" aria-live="polite"></div>
+    <div id="score" aria-live="polite"></div>
+    <div id="highScore" aria-live="polite"></div>
+    <div id="timer">Time remaining: 15s</div>
+    <div id="timerBar">
+      <div id="timerProgress" style="width: 100%;"></div>
+    </div>
+    
+    <!-- Game Controls Container -->
+    <div class="game-controls-container">
+      <button id="backToDifficultyBtn">Back</button>
+      <button id="restartBtn">Restart</button>
+    </div>
+  </div>
 
-    <!-- Projects Section -->
-    <section id="projects" class="py-16 bg-white">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 fade-in">
-                <h2 class="text-3xl font-bold text-gray-800 mb-4">Key Projects</h2>
-                <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
-                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Showcase of significant projects I've contributed to throughout my career.</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Project 1 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 fade-in">
-                    <div class="h-48 bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center">
-                        <i class="fas fa-network-wired text-white text-6xl"></i>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Syzefxis II Network Expansion</h3>
-                        <p class="text-gray-600 mb-4">Led the implementation of the Public Sector Network expansion, connecting over 500 government offices across Greece.</p>
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Fiber Optic</span>
-                            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Government</span>
-                            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Infrastructure</span>
-                        </div>
-                        <a href="#" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
-                            View Details <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Project 2 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 fade-in">
-                    <div class="h-48 bg-gradient-to-r from-green-500 to-teal-600 flex items-center justify-center">
-                        <i class="fas fa-satellite-dish text-white text-6xl"></i>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Rural Connectivity Initiative</h3>
-                        <p class="text-gray-600 mb-4">Deployed microwave point-to-point systems to bring high-speed internet to remote areas of Greece.</p>
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Microwave</span>
-                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Rural</span>
-                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Connectivity</span>
-                        </div>
-                        <a href="#" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
-                            View Details <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Project 3 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 fade-in">
-                    <div class="h-48 bg-gradient-to-r from-purple-500 to-pink-600 flex items-center justify-center">
-                        <i class="fas fa-building text-white text-6xl"></i>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Corporate Network Overhaul</h3>
-                        <p class="text-gray-600 mb-4">Redesigned and upgraded network infrastructure for a major financial institution, improving performance by 40%.</p>
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">Enterprise</span>
-                            <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">Optimization</span>
-                            <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">Security</span>
-                        </div>
-                        <a href="#" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
-                            View Details <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <div class="confetti-container" id="confettiContainer"></div>
 
-    <!-- Testimonials Section -->
-    <section id="testimonials" class="py-16 bg-gray-50">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 fade-in">
-                <h2 class="text-3xl font-bold text-gray-800 mb-4">Client Testimonials</h2>
-                <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
-                <p class="text-lg text-gray-600 max-w-3xl mx-auto">What colleagues and clients say about working with me.</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Testimonial 1 -->
-                <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100 fade-in">
-                    <div class="flex items-center mb-4">
-                        <div class="text-yellow-400 mr-2">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 mb-6 italic">"ibsds consistently delivered exceptional results on our network expansion project. His expertise in fiber optic systems was invaluable, and he completed the work ahead of schedule."</p>
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold mr-4">JD</div>
-                        <div>
-                            <h4 class="font-semibold text-gray-800">John D.</h4>
-                            <p class="text-gray-600 text-sm">Project Manager, NOVA S.A.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Testimonial 2 -->
-                <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100 fade-in">
-                    <div class="flex items-center mb-4">
-                        <div class="text-yellow-400 mr-2">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 mb-6 italic">"Working with ibsds on the Syzefxis II project was a pleasure. His technical knowledge and problem-solving skills helped us overcome numerous challenges during implementation."</p>
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600 font-bold mr-4">MK</div>
-                        <div>
-                            <h4 class="font-semibold text-gray-800">Maria K.</h4>
-                            <p class="text-gray-600 text-sm">Network Engineer, Vodafone</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Testimonial 3 -->
-                <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100 fade-in">
-                    <div class="flex items-center mb-4">
-                        <div class="text-yellow-400 mr-2">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 mb-6 italic">"His ability to troubleshoot complex network issues is unmatched. ibsds saved our company countless hours with his efficient problem-solving approach."</p>
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 font-bold mr-4">AP</div>
-                        <div>
-                            <h4 class="font-semibold text-gray-800">Alex P.</h4>
-                            <p class="text-gray-600 text-sm">IT Director, Financial Institution</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Testimonial 4 -->
-                <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100 fade-in">
-                    <div class="flex items-center mb-4">
-                        <div class="text-yellow-400 mr-2">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 mb-6 italic">"I've worked with many network technicians over the years, but ibsds stands out for his professionalism and dedication to quality work. Highly recommended."</p>
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold mr-4">SN</div>
-                        <div>
-                            <h4 class="font-semibold text-gray-800">Sophia N.</h4>
-                            <p class="text-gray-600 text-sm">Operations Manager, Wind S.A.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const allQuestions = [
+        { question: "Which layer is responsible for physical transmission?", answer: "1" },
+        { question: "Which layer ensures error-free data transfer?", answer: "2" },
+        { question: "Which layer handles routing?", answer: "3" },
+        { question: "Which layer ensures reliable delivery?", answer: "4" },
+        { question: "Which layer manages sessions?", answer: "5" },
+        { question: "Which layer handles translation and encryption?", answer: "6" },
+        { question: "Which layer interacts with software apps?", answer: "7" },
+        { question: "Where does IP addressing occur?", answer: "3" },
+        { question: "Where does MAC addressing occur?", answer: "2" },
+        { question: "Where does segmentation happen?", answer: "4" },
+        { question: "Which layer deals with bitstream transmission?", answer: "1" },
+      ];
 
-    <!-- Certifications Section -->
-    <section id="certifications" class="py-16 bg-white">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 fade-in">
-                <h2 class="text-3xl font-bold text-gray-800 mb-4">Certifications</h2>
-                <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
-                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Professional certifications that validate my expertise in network and telecommunications.</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Certification 1 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 fade-in">
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
-                            <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 text-2xl mr-4">
-                                <i class="fas fa-certificate"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-800">Fiber Optic Association (FOA)</h3>
-                                <p class="text-gray-600 text-sm">Certified Fiber Optic Technician</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 mb-4">Advanced certification in fiber optic installation, testing, and maintenance.</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-500 text-sm">Issued: 2020</span>
-                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Verify</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Certification 2 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 fade-in">
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
-                            <div class="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center text-green-600 text-2xl mr-4">
-                                <i class="fas fa-certificate"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-800">Cisco</h3>
-                                <p class="text-gray-600 text-sm">CCNA Routing & Switching</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 mb-4">Foundational networking knowledge and skills for network installation and support.</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-500 text-sm">Issued: 2018</span>
-                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Verify</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Certification 3 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 fade-in">
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
-                            <div class="w-16 h-16 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600 text-2xl mr-4">
-                                <i class="fas fa-certificate"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-800">CompTIA</h3>
-                                <p class="text-gray-600 text-sm">Network+</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 mb-4">Vendor-neutral networking certification covering essential networking concepts.</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-500 text-sm">Issued: 2016</span>
-                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Verify</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Certification 4 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 fade-in">
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
-                            <div class="w-16 h-16 bg-red-100 rounded-lg flex items-center justify-center text-red-600 text-2xl mr-4">
-                                <i class="fas fa-certificate"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-800">BICSI</h3>
-                                <p class="text-gray-600 text-sm">Installer 1, Copper</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 mb-4">Specialized certification for copper-based structured cabling systems.</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-500 text-sm">Issued: 2015</span>
-                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Verify</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Certification 5 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 fade-in">
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
-                            <div class="w-16 h-16 bg-yellow-100 rounded-lg flex items-center justify-center text-yellow-600 text-2xl mr-4">
-                                <i class="fas fa-certificate"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-800">BICSI</h3>
-                                <p class="text-gray-600 text-sm">Installer 2, Optical Fiber</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 mb-4">Advanced certification for fiber optic cabling installation and testing.</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-500 text-sm">Issued: 2017</span>
-                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Verify</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Certification 6 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 fade-in">
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
-                            <div class="w-16 h-16 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 text-2xl mr-4">
-                                <i class="fas fa-certificate"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-800">ETA International</h3>
-                                <p class="text-gray-600 text-sm">Telecommunications Technician</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 mb-4">Comprehensive certification covering various telecommunications technologies.</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-500 text-sm">Issued: 2014</span>
-                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Verify</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+      let questions = [];
+      let currentQuestion = 0;
+      let correctAnswers = 0;
+      let baseTime = 15;
+      let timerSpeedFactor = 1;
+      let questionAnswered = false;
+      let gameOver = false;
+      let highScore = 0;
+      let questionResults = []; // Store true for correct, false for incorrect
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-16 bg-gray-50">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 fade-in">
-                <h2 class="text-3xl font-bold text-gray-800 mb-4">Contact Me</h2>
-                <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
-                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Feel free to reach out if you have any questions or opportunities!</p>
-            </div>
-            
-            <div class="md:flex">
-                <div class="md:w-1/2 mb-10 md:mb-0 md:pr-8 fade-in">
-                    <form id="contact-form" class="space-y-6">
-                        <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                            <input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
-                        </div>
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                            <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
-                        </div>
-                        <div>
-                            <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
-                            <textarea id="message" name="message" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required></textarea>
-                        </div>
-                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300 flex items-center justify-center">
-                            <i class="fas fa-paper-plane mr-2"></i> Send Message
-                        </button>
-                    </form>
-                    <div id="form-status" class="mt-4 p-4 rounded-lg hidden"></div>
-                </div>
-                
-                <div class="md:w-1/2 md:pl-8 fade-in">
-                    <div class="bg-white p-8 rounded-lg h-full shadow-sm border border-gray-100">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-6">Connect With Me</h3>
-                        <div class="space-y-6">
-                            <div class="flex items-center">
-                                <div class="bg-blue-100 p-3 rounded-full mr-4">
-                                    <i class="fas fa-envelope text-blue-600 text-xl"></i>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-500">Email</p>
-                                    <p class="font-medium text-gray-800">contact@ibsds.com</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center">
-                                <div class="bg-blue-100 p-3 rounded-full mr-4">
-                                    <i class="fab fa-linkedin text-blue-600 text-xl"></i>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-500">LinkedIn</p>
-                                    <a href="https://www.linkedin.com/in/your-linkedin" class="font-medium text-blue-600 hover:underline">linkedin.com/in/your-linkedin</a>
-                                </div>
-                            </div>
-                            <div class="flex items-center">
-                                <div class="bg-blue-100 p-3 rounded-full mr-4">
-                                    <i class="fas fa-certificate text-blue-600 text-xl"></i>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-500">Credly</p>
-                                    <a href="https://www.credly.com/users/xxxxx-user" class="font-medium text-blue-600 hover:underline">credly.com/users/xxxxx-user</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-10 pt-6 border-t border-gray-200">
-                            <h4 class="text-lg font-medium text-gray-800 mb-4">Let's Work Together</h4>
-                            <p class="text-gray-600">I'm always open to discussing new projects, creative ideas or opportunities to be part of your vision.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+      // Variables for difficulty
+      let totalQuestions = 11; // Default to hard mode
+      let difficultyLevel = "Hard";
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="md:flex md:items-center md:justify-between">
-                <div class="flex justify-center md:justify-start items-center mb-6 md:mb-0">
-                    <img src="https://ibsds.github.io/photos/ib_logos3.png" alt="Logo" class="h-10 w-auto">
-                    <span class="ml-2 text-xl font-bold text-white">ibsds</span>
-                </div>
-                <div class="flex justify-center md:justify-end space-x-6">
-                    <a href="https://www.linkedin.com/in/your-linkedin" class="text-gray-400 hover:text-white">
-                        <i class="fab fa-linkedin text-2xl"></i>
-                    </a>
-                    <a href="https://www.credly.com/users/xxxxx-user" class="text-gray-400 hover:text-white">
-                        <i class="fas fa-certificate text-2xl"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="mt-8 text-center md:text-left">
-                <p class="text-gray-400">© 2025 ibsds. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+      let startTime = 0;
+      let timerInterval;
 
-    <script>
-        // Mobile menu toggle
-        document.getElementById('menu-btn').addEventListener('click', function() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        });
-        
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(event) {
-            const menuBtn = document.getElementById('menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-            
-            if (!menuBtn.contains(event.target) && !mobileMenu.contains(event.target)) {
-                mobileMenu.classList.add('hidden');
+      // Get element selectors
+      const startPageContainer = document.getElementById("start-page-container");
+      const difficultyContainer = document.getElementById("difficulty-container");
+      const gameContainer = document.getElementById("game-container");
+      const startGameBtn = document.getElementById("startGameBtn");
+      const difficultyBtns = document.querySelectorAll(".difficulty-btn");
+      const backToStartBtn = document.getElementById("backToStartBtn");
+      const backToDifficultyBtn = document.getElementById("backToDifficultyBtn");
+      
+      const questionNumberEl = document.getElementById("questionNumber");
+      const questionEl = document.getElementById("question");
+      const feedbackEl = document.getElementById("feedback");
+      const scoreEl = document.getElementById("score");
+      const highScoreEl = document.getElementById("highScore");
+      const timerEl = document.getElementById("timer");
+      const timerProgressEl = document.getElementById("timerProgress");
+      const restartBtn = document.getElementById("restartBtn");
+      const layerLis = document.querySelectorAll(".OSI-Layers li");
+      const confettiContainer = document.getElementById("confettiContainer");
+      const progressContainer = document.getElementById("progressContainer");
+      const progressLegend = document.getElementById("progressLegend");
+
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      }
+
+      function initializeProgressDots() {
+        progressContainer.innerHTML = "";
+        for (let i = 0; i < questions.length; i++) {
+          const dot = document.createElement("div");
+          dot.className = "progress-dot";
+          progressContainer.appendChild(dot);
+        }
+        updateProgressDots();
+      }
+
+      function updateProgressDots() {
+        const dots = progressContainer.querySelectorAll(".progress-dot");
+        dots.forEach((dot, index) => {
+          dot.classList.remove("active", "completed", "incorrect");
+          if (index < currentQuestion) {
+            if (questionResults[index] === true) {
+              dot.classList.add("completed");
+            } else {
+              dot.classList.add("incorrect");
             }
+          } else if (index === currentQuestion) {
+            dot.classList.add("active");
+          }
         });
+      }
+
+      function loadQuestion() {
+        if (gameOver) return;
         
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.getElementById('mobile-menu').classList.add('hidden');
-                
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                
-                window.scrollTo({
-                    top: targetElement.offsetTop - 70,
-                    behavior: 'smooth'
-                });
-            });
+        // FIX: Added a safety check to prevent errors if a question is missing.
+        if (!questions[currentQuestion]) {
+          console.error("Question not found! Ending game to prevent crash.");
+          gameOver = true;
+          showFinalScore();
+          return;
+        }
+
+        questionAnswered = false;
+        clearSelection();
+        removeCorrectHighlight();
+
+        questionNumberEl.innerText = `Question ${currentQuestion + 1}/${questions.length}`;
+        questionEl.innerText = questions[currentQuestion].question;
+        feedbackEl.innerHTML = "";
+        feedbackEl.className = "";
+        enableLayers(true);
+
+        startTime = Date.now();
+        
+        // Adjust base time based on difficulty
+        let adjustedBaseTime = baseTime;
+        if (totalQuestions === 3) {
+          adjustedBaseTime = 20; // More time for easy mode
+        } else if (totalQuestions === 6) {
+          adjustedBaseTime = 18; // Slightly more time for medium mode
+        }
+
+        updateTimerDisplay(adjustedBaseTime);
+        startTimer(adjustedBaseTime);
+        
+        updateProgressDots();
+      }
+
+      function updateTimerDisplay(customBaseTime) {
+        const elapsedMs = Date.now() - startTime;
+        const baseTimeToUse = customBaseTime || baseTime;
+        let timeLeft = Math.ceil(baseTimeToUse * timerSpeedFactor - elapsedMs / 1000);
+
+        if (timeLeft < 0) timeLeft = 0;
+
+        timerEl.innerText = `Time remaining: ${timeLeft}s`;
+        const progressWidth = (timeLeft / (baseTimeToUse * timerSpeedFactor)) * 100;
+        timerProgressEl.style.width = progressWidth + "%";
+
+        return timeLeft;
+      }
+
+      function startTimer(customBaseTime) {
+        clearInterval(timerInterval);
+        const baseTimeToUse = customBaseTime || baseTime;
+        timerInterval = setInterval(() => {
+          const timeLeft = updateTimerDisplay(baseTimeToUse);
+          if (timeLeft <= 0 && !questionAnswered) {
+            clearInterval(timerInterval);
+            questionAnswered = true;
+            questionResults.push(false); // Record as incorrect
+            showFeedback(false, "Time's up! Moving to next question.", true);
+            enableLayers(false);
+            setTimeout(nextQuestion, 2000);
+          }
+        }, 200);
+      }
+
+      function showFeedback(isCorrect, message, highlightCorrect = false) {
+        feedbackEl.className = isCorrect ? "correct-feedback animated" : "incorrect-feedback animated";
+        feedbackEl.innerText = message;
+
+        if (highlightCorrect) {
+          highlightCorrectAnswer();
+        }
+      }
+
+      // Update score to show percentage
+      function updateScore() {
+        const percentage = questions.length > 0 ? 
+          Math.round((correctAnswers / questions.length) * 100) : 0;
+        
+        scoreEl.innerText = `Correct Answers: ${correctAnswers}/${questions.length} (${percentage}%)`;
+        highScoreEl.innerText = `High Score: ${highScore}`;
+      }
+
+      function getHighScore() {
+        return parseInt(localStorage.getItem("osiQuizHighScore") || "0", 10);
+      }
+
+      function saveHighScore(score) {
+        const currentHigh = getHighScore();
+        if (score > currentHigh) {
+          localStorage.setItem("osiQuizHighScore", score.toString());
+          return true;
+        }
+        return false;
+      }
+
+      function nextQuestion() {
+        currentQuestion++;
+        if (currentQuestion >= questions.length) {
+          gameOver = true;
+          showFinalScore();
+        } else {
+          loadQuestion();
+        }
+      }
+
+      // FIX: Updated final score logic to show confetti for a perfect score
+      function showFinalScore() {
+        clearInterval(timerInterval);
+        questionNumberEl.innerText = "Quiz Complete!";
+        
+        const percentage = Math.round((correctAnswers / questions.length) * 100);
+        questionEl.innerText = 
+          `Your final score: ${correctAnswers} out of ${questions.length} (${percentage}%)`;
+        
+        const isNewHighScore = saveHighScore(correctAnswers);
+        highScore = getHighScore();
+        updateScore();
+        
+        progressLegend.style.display = "none"; // Hide legend at the end
+        updateProgressDots(); // Update dots to show final results
+
+        // FIX: Trigger confetti for a new high score OR a perfect score (100%)
+        if (isNewHighScore) {
+          feedbackEl.innerText = "Congratulations! You've set a new high score!";
+          feedbackEl.className = "correct-feedback animated new-high-score";
+          createConfetti();
+        } else if (percentage === 100) {
+          feedbackEl.innerText = "Perfect score! Well done!";
+          feedbackEl.className = "correct-feedback animated new-high-score"; // Use same styling for celebration
+          createConfetti();
+        } else {
+          feedbackEl.innerText = "Click Restart to play again.";
+          feedbackEl.className = "";
+        }
+
+        enableLayers(false);
+      }
+
+      function enableLayers(enabled) {
+        layerLis.forEach(li => {
+          li.style.pointerEvents = enabled ? "auto" : "none";
+          li.setAttribute("aria-disabled", !enabled);
+          li.tabIndex = enabled ? 0 : -1;
         });
+      }
+
+      function clearSelection() {
+        layerLis.forEach(li => li.classList.remove("selected"));
+      }
+
+      function highlightCorrectAnswer() {
+        const correctLayer = questions[currentQuestion].answer;
+        layerLis.forEach(li => {
+          if (li.getAttribute("data-layer") === correctLayer) {
+            li.classList.add("correct-answer");
+          }
+        });
+      }
+
+      function removeCorrectHighlight() {
+        layerLis.forEach(li => li.classList.remove("correct-answer"));
+      }
+
+      // FIX: Updated createConfetti function for a smoother animation
+      function createConfetti() {
+        confettiContainer.style.display = 'block';
+        confettiContainer.innerHTML = '';
         
-        // Form submission using Formspree
-        document.getElementById('contact-form').addEventListener('submit', function(e) {
+        const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', 
+                        '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4CAF50', 
+                        '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800'];
+        
+        for (let i = 0; i < 150; i++) { // Increased from 100 to 150
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti';
+          confetti.style.left = Math.random() * 100 + '%';
+          confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+          confetti.style.opacity = Math.random();
+          confettiContainer.appendChild(confetti);
+        }
+        
+        // FIX: Increased timeout to ensure all animations can finish
+        setTimeout(() => {
+          confettiContainer.style.display = 'none';
+        }, 6000); // Increased from 5000 to 6000ms
+      }
+
+      function handleAnswer(layerNumber, liElement) {
+        if (questionAnswered || gameOver) return;
+        questionAnswered = true;
+        clearInterval(timerInterval);
+
+        const isCorrect = (layerNumber === questions[currentQuestion].answer);
+        questionResults.push(isCorrect);
+
+        if (isCorrect) {
+          correctAnswers++;
+          showFeedback(true, "Correct! 🎉");
+          timerSpeedFactor = Math.max(0.7, timerSpeedFactor - 0.1);
+        } else {
+          showFeedback(false, `Incorrect. The correct answer was Layer ${questions[currentQuestion].answer}.`, true);
+          timerSpeedFactor = Math.min(1.5, timerSpeedFactor + 0.2);
+        }
+        updateScore();
+        enableLayers(false);
+        liElement.classList.add("selected");
+        setTimeout(nextQuestion, 2000);
+      }
+
+      // Function to show difficulty selection
+      function showDifficultySelection() {
+        startPageContainer.classList.add("hidden");
+        difficultyContainer.classList.remove("hidden");
+        gameContainer.classList.add("hidden");
+      }
+
+      // Function to handle difficulty selection
+      function selectDifficulty(numQuestions) {
+        totalQuestions = numQuestions;
+        
+        // Set difficulty level text based on number of questions
+        if (numQuestions === 3) {
+          difficultyLevel = "Easy";
+        } else if (numQuestions === 6) {
+          difficultyLevel = "Medium";
+        } else {
+          difficultyLevel = "Hard";
+        }
+        
+        // Show the game with the selected difficulty
+        difficultyContainer.classList.add("hidden");
+        gameContainer.classList.remove("hidden");
+        startGame();
+      }
+
+      // The startGame function now uses the selected number of questions
+      function startGame() {
+        clearInterval(timerInterval);
+        
+        // FIX: Shuffle the entire pool of questions first, then take a slice.
+        const shuffledAllQuestions = [...allQuestions];
+        shuffleArray(shuffledAllQuestions);
+        questions = shuffledAllQuestions.slice(0, totalQuestions);
+        
+        currentQuestion = 0;
+        correctAnswers = 0;
+        gameOver = false;
+        timerSpeedFactor = 1;
+        questionResults = []; // Reset results
+        highScore = getHighScore();
+        updateScore();
+        initializeProgressDots();
+        loadQuestion();
+        feedbackEl.innerText = "";
+        confettiContainer.style.display = "none";
+        progressLegend.style.display = "flex"; // Show legend at the start
+        
+        // Update the game title to show difficulty
+        document.querySelector("#game-container .game-title").innerText = 
+          `OSI Layer Quiz - ${difficultyLevel}`;
+      }
+
+      layerLis.forEach(li => {
+        li.addEventListener("click", () => {
+          if (li.classList.contains("disabled")) return;
+          const layerNum = li.getAttribute("data-layer");
+          handleAnswer(layerNum, li);
+        });
+        li.addEventListener("keydown", e => {
+          if ((e.key === "Enter" || e.key === " ") && !li.classList.contains("disabled")) {
             e.preventDefault();
-            
-            const formStatus = document.getElementById('form-status');
-            const form = this;
-            
-            // Show loading state
-            formStatus.innerHTML = '<div class="bg-blue-100 text-blue-800 p-4 rounded-lg">Sending message...</div>';
-            formStatus.classList.remove('hidden');
-            
-            // Get form values
-            const formData = new FormData(form);
-            
-            // Replace with your Formspree form ID
-            fetch('https://formspree.io/f/your-form-id', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-                throw new Error('Network response was not ok.');
-            })
-            .then(data => {
-                formStatus.innerHTML = '<div class="bg-green-100 text-green-800 p-4 rounded-lg">Thank you! Your message has been sent successfully.</div>';
-                form.reset();
-                
-                // Hide success message after 5 seconds
-                setTimeout(() => {
-                    formStatus.classList.add('hidden');
-                }, 5000);
-            })
-            .catch(error => {
-                formStatus.innerHTML = '<div class="bg-red-100 text-red-800 p-4 rounded-lg">Oops! There was a problem sending your message. Please try again later.</div>';
-                console.error('Error:', error);
-            });
+            const layerNum = li.getAttribute("data-layer");
+            handleAnswer(layerNum, li);
+          }
         });
-        
-        // Intersection Observer for fade-in animations
-        const fadeElements = document.querySelectorAll('.fade-in');
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, {
-            threshold: 0.1
+      });
+
+      // Event listeners
+      startGameBtn.addEventListener("click", showDifficultySelection);
+
+      difficultyBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const numQuestions = parseInt(btn.getAttribute("data-questions"));
+          selectDifficulty(numQuestions);
         });
-        
-        fadeElements.forEach(element => {
-            observer.observe(element);
-        });
-    </script>
+      });
+
+      backToStartBtn.addEventListener("click", () => {
+        difficultyContainer.classList.add("hidden");
+        startPageContainer.classList.remove("hidden");
+      });
+
+      // Event listener for the new Back button
+      backToDifficultyBtn.addEventListener("click", () => {
+        clearInterval(timerInterval); // Stop the timer
+        gameContainer.classList.add("hidden");
+        showDifficultySelection();
+      });
+
+      // The "Restart" button now restarts the same game
+      restartBtn.addEventListener("click", () => {
+        startGame();
+      });
+
+      // Initial UI setup for the hidden game container
+      questionNumberEl.innerText = "";
+      questionEl.innerText = "Click Start to begin the OSI Layer Quiz!";
+      feedbackEl.innerText = "";
+      scoreEl.innerText = "";
+      highScoreEl.innerText = "";
+      timerEl.innerText = "";
+      timerProgressEl.style.width = "0%";
+      enableLayers(false);
+      highScore = getHighScore();
+      updateScore();
+      progressLegend.style.display = "none"; // Hide legend initially
+    });
+  </script>
 </body>
 </html>
