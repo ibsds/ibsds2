@@ -1,2 +1,2 @@
 # ibsds2
-web project 2
+OSI game quiz
