@@ -1,1058 +1,1055 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" />
-  <title>OSI Layer Quiz Game</title>
-  <style>
-    /* --- MODIFIED: Global Space/Cosmos Theme --- */
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      color: #f0f0f5;
-      /* MODIFIED: Body now has the space gradient background */
-      background: linear-gradient(to bottom, #0a0e27 0%, #1a1a3e 50%, #16213e 100%);
-      overflow-x: hidden;
-    }
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; frame-ancestors 'self'; img-src 'self' data:; script-src 'self' https://cdnjs.cloudflare.com https://challenges.cloudflare.com 'unsafe-inline'; style-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline'; font-src 'self' https://cdnjs.cloudflare.com; connect-src 'self'; frame-src https://challenges.cloudflare.com;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ibsds - Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha384-h/hnnw1Bi4nbpD6kE7nYfCXzovi622sY5WBxww8ARKwpdLj5kUWjRuyiXaD1U2JT" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    /* NEW: Animated Starfield Background is now global */
-    body::before {
-      content: '';
-      position: fixed; /* Use fixed to cover the whole viewport */
-      top: 0;
-      left: 0;
-      width: 200%;
-      height: 200%;
-      background-image: 
-        radial-gradient(2px 2px at 20px 30px, #eee, transparent),
-        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
-        radial-gradient(1px 1px at 50px 50px, #fff, transparent),
-        radial-gradient(1px 1px at 80px 10px, rgba(255,255,255,0.6), transparent),
-        radial-gradient(2px 2px at 130px 80px, #ddd, transparent);
-      background-repeat: repeat;
-      background-size: 200px 200px;
-      animation: starsMove 120s linear infinite;
-      z-index: -1;
-    }
-    @keyframes starsMove {
-      from { transform: translateX(0); }
-      to { transform: translateX(-200px); }
-    }
+        :root {
+            --bg-primary: #0f0f0f;       /* Lighter dark for main bg */
+            --bg-secondary: #141414;     /* Slightly lighter */
+            --bg-card: #1a1a1a;          /* Cards pop out more */
+            --bg-card-hover: #222222;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b0b0b0;   /* Softer white */
+            --text-muted: #777777;
+            --accent: #f59e0b;
+            --accent-light: #fbbf24;
+            --border: rgba(255,255,255,0.08);
+            --glass: rgba(15,15,15,0.9);
+        }
 
-    /* --- Start Page Specific Styles --- */
-    #start-page-container {
-      position: relative;
-      background: transparent; /* Keep it transparent */
-      animation: pageFadeIn 1s ease-out;
-      border: none;
-      box-shadow: none;
-    }
-    @keyframes pageFadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
 
-    /* Override title styles for the start page */
-    #start-page-container .game-title {
-      color: #ffffff; /* Bright white */
-      text-shadow: 0 0 10px #ffffff, 0 0 20px #6495ed, 0 0 30px #6495ed;
-      animation: titleGlow 3s ease-in-out infinite alternate;
-    }
-    @keyframes titleGlow {
-      from { text-shadow: 0 0 10px #ffffff, 0 0 20px #6495ed, 0 0 30px #6495ed; }
-      to { text-shadow: 0 0 15px #ffffff, 0 0 25px #87ceeb, 0 0 35px #87ceeb; }
-    }
-    
-    /* Override paragraph text color */
-    #start-page-container p {
-      color: #b0c4de; /* Light steel blue */
-      text-shadow: 0 0 5px #b0c4de;
-    }
+        /* --- Ambient Background (Very Subtle now) --- */
+        .ambient {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .ambient::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, rgba(245,158,11,0.04), transparent 70%);
+            filter: blur(100px);
+            animation: ambientFloat 25s ease-in-out infinite;
+        }
+        @keyframes ambientFloat {
+            0%, 100% { transform: translateX(-50%) translate(0, 0) scale(1); }
+            33% { transform: translateX(-50%) translate(30px, -20px) scale(1.05); }
+            66% { transform: translateX(-50%) translate(-20px, 15px) scale(0.95); }
+        }
 
-    /* Override Visual Layer Stack for Glass Panel Effect */
-    #start-page-container #layer-visual-stack .visual-layer {
-      background: rgba(255, 255, 255, 0.05); /* Very transparent white */
-      border: 1px solid rgba(100, 149, 237, 0.3);
-      color: #e6e6fa; /* Lavender */
-      box-shadow: 0 0 10px rgba(100, 149, 237, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.1);
-      text-shadow: 0 0 3px #e6e6fa;
-      backdrop-filter: blur(4px);
-    }
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-    /* Override Start Button for Nebula Effect */
-    #start-page-container #startGameBtn {
-      background: linear-gradient(45deg, #4b0082, #6495ed);
-      color: #ffffff;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      box-shadow: 0 0 15px rgba(100, 149, 237, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.2);
-      animation: buttonNebulaPulse 2s ease-in-out infinite;
-    }
-    #start-page-container #startGameBtn:hover {
-      background: linear-gradient(45deg, #6a0dad, #87ceeb);
-      box-shadow: 0 0 20px rgba(100, 149, 237, 0.7), inset 0 0 15px rgba(255, 255, 255, 0.3);
-    }
-    @keyframes buttonNebulaPulse {
-      0%, 100% { box-shadow: 0 0 15px rgba(100, 149, 237, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.2); }
-      50% { box-shadow: 0 0 25px rgba(100, 149, 237, 0.7), inset 0 0 15px rgba(255, 255, 255, 0.3); }
-    }
+        /* --- Sound Wave Loading Screen --- */
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background-color: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease-out;
+        }
+        #loading-screen.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .sound-wave {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+            width: 50px;
+            height: 40px;
+        }
+        .sound-wave div {
+            width: 6px;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--accent);
+            animation: audio-wave 1.8s infinite ease-in-out;
+        }
+        .sound-wave div:nth-child(2) { animation-delay: 0.2s; }
+        .sound-wave div:nth-child(3) { animation-delay: 0.4s; }
+        .sound-wave div:nth-child(4) { animation-delay: 0.6s; }
+        .sound-wave div:nth-child(5) { animation-delay: 0.8s; }
+
+        @keyframes audio-wave {
+            0% { height: 6px; background: var(--accent); }
+            25% { height: 30px; background: #ef4444; }
+            50% { height: 6px; background: #a855f7; }
+            100% { height: 6px; background: var(--accent); }
+        }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+        }
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+        #scrollToTop {
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-text {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        #logo-image {
+            height: 40px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+        #scrollToTop:hover #logo-image {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 400;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--text-primary);
+        }
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* Hamburger */
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 1001;
+        }
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background-color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            .nav-links {
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                flex-direction: column;
+                background: var(--glass);
+                backdrop-filter: blur(16px);
+                padding: 20px;
+                gap: 20px;
+                border-bottom: 1px solid var(--border);
+                display: none;
+            }
+            .nav-links.active { display: flex; }
+            .nav-links a { font-size: 16px; }
+        }
+
+        /* --- Hero Header --- */
+        header {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background-color: #0a0a0a; /* Keep Hero deep black for contrast */
+        }
+        header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(245,158,11,0.06), transparent 60%);
+            z-index: 0;
+        }
+
+        .header-content {
+            z-index: 1;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .glitch-wrapper {
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: center;
+        }
+        .glitch {
+            position: relative;
+            font-size: clamp(40px, 8vw, 80px);
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.04em;
+            text-transform: uppercase;
+        }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            overflow: hidden;
+        }
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 #ef4444;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 #3b82f6;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim {
+            0% { clip: rect(10px, 9999px, 31px, 0); }
+            20% { clip: rect(70px, 9999px, 71px, 0); }
+            40% { clip: rect(29px, 9999px, 14px, 0); }
+            60% { clip: rect(67px, 9999px, 61px, 0); }
+            80% { clip: rect(16px, 9999px, 6px, 0); }
+            100% { clip: rect(86px, 9999px, 34px, 0); }
+        }
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 100px, 0); }
+            20% { clip: rect(20px, 9999px, 1px, 0); }
+            40% { clip: rect(88px, 9999px, 44px, 0); }
+            60% { clip: rect(10px, 9999px, 55px, 0); }
+            80% { clip: rect(40px, 9999px, 20px, 0); }
+            100% { clip: rect(5px, 9999px, 85px, 0); }
+        }
+
+        .header-content > p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.5s forwards;
+        }
+
+        /* --- Sections General --- */
+        .section {
+            padding: 120px 0;
+            text-align: center;
+            /* Alternating subtle grays to prevent eye strain */
+            background-color: var(--bg-primary); 
+        }
+        .section:nth-of-type(even) {
+            background-color: var(--bg-secondary); /* Slightly lighter gray for About/Contact */
+        }
+
+        .section h2 {
+            font-size: clamp(28px, 5vw, 44px);
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+        .section > .container > p {
+            color: var(--text-secondary);
+            font-size: 16px;
+            font-weight: 300;
+            margin-bottom: 48px;
+        }
+
+        /* --- About Me --- */
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .about-content p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-bottom: 20px;
+            font-weight: 300;
+            line-height: 1.8;
+        }
+
+        /* --- Skills / Flip Cards (FIXED FOR WIDE SCREENS) --- */
+        .skills {
+            display: grid;
+            /* Changed to fixed 3 columns on large screens, responsive on smaller */
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px;
+            margin-top: 40px;
+        }
+        .skill {
+            position: relative;
+            perspective: 1000px;
+            height: 220px; /* Increased height for breathing room */
+            cursor: pointer;
+        }
+        .skill-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .skill.flipped .skill-inner {
+            transform: rotateY(180deg);
+        }
+        .skill-front, .skill-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            transition: border-color 0.3s ease, background 0.3s ease;
+        }
+        .skill:hover .skill-front {
+            border-color: rgba(245,158,11,0.2);
+            background: var(--bg-card-hover);
+        }
+        .skill-front {
+            background: var(--bg-card);
+            flex-direction: column;
+            gap: 16px;
+        }
+        .skill-front i {
+            font-size: 36px;
+            color: var(--accent);
+        }
+        .flip-hint {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            font-size: 14px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+        .skill.flipped .flip-hint { display: none; }
+        
+        .skill-back {
+            background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(245,158,11,0.02));
+            transform: rotateY(180deg);
+            border-color: rgba(245,158,11,0.3);
+        }
+        .skill-back h3 {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-primary);
+            line-height: 1.6; /* Better line height for text wrapping */
+        }
+
+        /* Responsive flip cards for tablets/mobile */
+        @media (max-width: 1024px) {
+            .skills { grid-template-columns: repeat(2, 1fr); }
+            .skill { height: 200px; }
+        }
+        @media (max-width: 600px) {
+            .skills { grid-template-columns: 1fr; }
+            .skill { height: 180px; }
+        }
 
 
-    /* --- Main Game Styles --- */
-    .game-container {
-      width: 90%;
-      max-width: 600px;
-      padding: 1rem;
-      box-sizing: border-box;
-    }
-    .game-title {
-      text-align: center;
-      font-size: 2.4rem;
-      font-weight: 900;
-      margin-bottom: 25px;
-      color: #8a8aff;
-      text-shadow: 0 0 8px #8a8affaa;
-      user-select: none;
-    }
-    #questionNumber {
-      font-weight: 600;
-      font-size: 1.2rem;
-      margin-bottom: 8px;
-      color: #a0a0ff;
-      /* CORRECTED: Added text-align: center */
-      text-align: center;
-    }
-    #question {
-      font-size: 1.4rem;
-      font-weight: 700;
-      margin-bottom: 20px;
-      line-height: 1.3;
-      /* CORRECTED: Added text-align: center */
-      text-align: center;
-    }
-    .OSI-Layers {
-      list-style: none;
-      padding: 0;
-      margin-bottom: 25px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-    }
-    .OSI-Layers li {
-      background: #2e2e4e;
-      color: #d7d7ff;
-      padding: 14px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      user-select: none;
-      flex: 1 1 45%;
-      max-width: 250px;
-      text-align: center;
-      font-weight: 600;
-      transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
-    }
-    .OSI-Layers li:hover {
-      background-color: #4a4ad8;
-      transform: scale(1.05);
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
-    }
-    .OSI-Layers li.selected {
-      background: #444444;
-      color: #ddd;
-      font-weight: 700;
-      border: 2px solid #bbbbbb;
-      box-shadow: 0 0 6px #999999aa;
-      transform: scale(0.97);
-      transition: transform 0.2s ease;
-      pointer-events: none;
-    }
-    .OSI-Layers li.disabled {
-      opacity: 0.5;
-      pointer-events: none;
-      cursor: default;
-    }
-    #feedback {
-      font-size: 1.1rem;
-      min-height: 1.5em;
-      margin-bottom: 20px;
-      text-align: center;
-      font-weight: 600;
-      border-radius: 6px;
-      padding: 8px 12px;
-      transition: background-color 0.4s ease, color 0.4s ease;
-    }
-    .correct-feedback {
-      background-color: #28a745;
-      color: #e6ffe6;
-      box-shadow: 0 0 10px #28a745aa;
-    }
-    .incorrect-feedback {
-      background-color: #dc3545;
-      color: #ffd6d6;
-      box-shadow: 0 0 10px #dc3545aa;
-    }
-    /* Animations */
-    @keyframes correctFlash {
-      0%, 100% { background-color: #28a745; }
-      50% { background-color: #3ade60; }
-    }
-    @keyframes incorrectFlash {
-      0%, 100% { background-color: #dc3545; }
-      50% { background-color: #e85c6f; }
-    }
-    @keyframes shake {
-      0% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      50% { transform: translateX(5px); }
-      75% { transform: translateX(-5px); }
-      100% { transform: translateX(0); }
-    }
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-    .correct-feedback.animated {
-      animation: correctFlash 0.8s ease-in-out;
-    }
-    .incorrect-feedback.animated {
-      animation: incorrectFlash 0.8s ease-in-out, shake 0.6s ease-in-out;
-    }
-    .OSI-Layers li.correct-answer {
-      border: 3px solid #ffc107;
-      box-shadow: 0 0 15px #ffc107;
-    }
-    #score, #highScore {
-      font-weight: 600;
-      font-size: 1rem;
-      color: #b0b0ff;
-      margin-bottom: 10px;
-      text-align: center;
-    }
-    #timer {
-      font-weight: 600;
-      text-align: center;
-      margin-bottom: 8px;
-      color: #cfcfff;
-    }
-    #timerProgress {
-      height: 12px;
-      background: #5b5bc8;
-      border-radius: 8px;
-      transition: width 0.2s ease;
-    }
-    #timerBar {
-      background: #2e2e4e;
-      border-radius: 8px;
-      overflow: hidden;
-      margin-bottom: 25px;
-    }
-    
-    /* --- NEW: Game Control Buttons Styles --- */
-    .game-controls-container {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 20px;
-    }
+        /* --- Work Experience Timeline --- */
+        #experience { padding-top: 80px; }
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            bottom: 10px;
+            width: 1px;
+            background: var(--border);
+        }
+        .timeline-item {
+            display: flex;
+            margin-bottom: 24px;
+            position: relative;
+            padding-left: 50px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 24px;
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            border: 2px solid var(--text-muted);
+            transition: border-color 0.3s ease;
+            z-index: 2;
+        }
+        .timeline-item:hover::before {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(245,158,11,0.3);
+        }
 
-    #restartBtn, #startGameBtn {
-      padding: 12px 24px; /* Adjusted padding */
-      background: #5b5bc8;
-      border: none;
-      border-radius: 10px;
-      color: #fff;
-      font-weight: 700;
-      font-size: 1.1rem;
-      cursor: pointer;
-      box-shadow: 0 6px 12px rgba(91, 91, 200, 0.6);
-      transition: background-color 0.3s ease;
-    }
-    #restartBtn:hover {
-      background: #4545a8;
-    }
-    #startGameBtn {
-      display: block; /* Keep this for the start page */
-      width: 180px;
-      margin: 0 auto;
-    }
+        .timeline-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            flex: 1;
+            cursor: pointer;
+            transition: border-color 0.3s ease, background 0.3s ease;
+            position: relative;
+        }
+        .timeline-item:hover .timeline-content {
+            border-color: rgba(255,255,255,0.1);
+            background: var(--bg-card-hover);
+        }
+        
+        .timeline-content h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .timeline-content h4 {
+            font-size: 14px;
+            color: var(--accent);
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+        .timeline-content .date {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: 'Inter', monospace;
+            margin-bottom: 0;
+        }
 
-    #backToDifficultyBtn {
-      padding: 12px 24px;
-      background: transparent;
-      border: 2px solid #5b5bc8;
-      border-radius: 10px;
-      color: #5b5bc8;
-      font-weight: 700;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    #backToDifficultyBtn:hover {
-      background: #5b5bc8;
-      color: #fff;
-    }
+        .timeline-icon {
+            position: absolute;
+            top: 20px;
+            right: 16px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        .timeline-icon i {
+            font-size: 12px;
+            color: var(--text-muted);
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        .timeline-item:hover .timeline-icon { background: rgba(255,255,255,0.08); }
+        .timeline-item:hover .timeline-icon i { color: var(--text-primary); }
+        .timeline-item.expanded .timeline-icon i { transform: rotate(180deg); color: var(--accent); }
 
-    .OSI-Layers li:focus {
-      outline: 3px solid #8a8aff;
-      outline-offset: 3px;
-    }
-    .new-high-score {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: #ffcd38;
-      text-shadow: 0 0 8px #ffcd38;
-      animation: pulse 1s infinite;
-    }
-    .confetti-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 999;
-      display: none;
-    }
-    .confetti {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      background: #f0f; /* This is a placeholder, JS sets it */
-      animation: confettiFall linear;
-      animation-fill-mode: forwards; /* FIX: Keep the final state of the animation */
-    }
-    @keyframes confettiFall {
-      0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-    }
-    /* Progress dots styles */
-    .progress-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 15px;
-      gap: 8px;
-    }
-    .progress-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background-color: #3c3c3c;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-    }
-    .progress-dot.active {
-      background-color: #5b5bc8;
-      transform: scale(1.2);
-    }
-    .progress-dot.completed {
-      background-color: #28a745;
-    }
-    .progress-dot.incorrect {
-      background-color: #dc3545;
-    }
-    .progress-legend {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      font-size: 0.8rem;
-      color: #a0a0ff;
-      margin-bottom: 20px;
-    }
-    .progress-legend-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .legend-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-    }
-    
-    /* Media queries for mobile devices */
-    @media (max-width: 480px) {
-      .game-container {
-        width: 95%;
-        padding: 0.8rem;
-      }
-      
-      .game-title {
-        font-size: 1.8rem;
-        margin-bottom: 15px;
-      }
-      
-      #question {
-        font-size: 1.1rem;
-        margin-bottom: 15px;
-      }
-      
-      .OSI-Layers li {
-        padding: 12px 15px;
-        font-size: 0.9rem;
-        flex: 1 1 100%; /* Make buttons full-width */
-        max-width: 100%;
-      }
-      
-      .progress-legend {
-        font-size: 0.7rem;
-        gap: 10px;
-        flex-wrap: wrap;
-      }
-      
-      #feedback {
-        font-size: 1rem;
-      }
-      
-      #score, #highScore {
-        font-size: 0.9rem;
-      }
-      
-      /* MODIFIED: Button styles for mobile */
-      .game-controls-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 15px;
-      }
-      #restartBtn, #backToDifficultyBtn, #startGameBtn {
-        width: 160px;
-        padding: 10px 0;
-        font-size: 1rem;
-      }
-    }
-    
-    /* Extra small screens */
-    @media (max-width: 360px) {
-      .game-title {
-        font-size: 1.6rem;
-      }
-      
-      #question {
-        font-size: 1rem;
-      }
-      
-      .OSI-Layers li {
-        padding: 10px 12px;
-        font-size: 0.85rem;
-      }
-      
-      .progress-legend {
-        font-size: 0.65rem;
-      }
-    }
+        .experience-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), margin-top 0.3s ease;
+            margin-top: 0;
+        }
+        .timeline-item.expanded .experience-details {
+            max-height: 500px;
+            margin-top: 16px;
+        }
+        .experience-details div, .experience-details li {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            padding-left: 16px;
+            position: relative;
+            line-height: 1.6;
+        }
+        .experience-details div::before, .experience-details li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+        .experience-details ul { list-style: none; }
 
-    /* Class to hide elements */
-    .hidden {
-      display: none;
-    }
+        /* --- Contact Form --- */
+        #contact-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        #contact-form input, #contact-form textarea {
+            width: 100%;
+            max-width: 500px;
+            padding: 14px 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        #contact-form input::placeholder, #contact-form textarea::placeholder { color: var(--text-muted); }
+        #contact-form input:focus, #contact-form textarea:focus {
+            border-color: rgba(245,158,11,0.4);
+            box-shadow: 0 0 0 3px rgba(245,158,11,0.08);
+        }
+        #contact-form .btn {
+            padding: 14px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--bg-primary);
+            background: var(--accent);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        #contact-form .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(245,158,11,0.25);
+        }
 
-    /* --- Start Page Specific Styles (Originals, some now overridden) --- */
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 32px;
+        }
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .social-btn i { font-size: 16px; }
+        .social-btn:hover {
+            color: var(--text-primary);
+            border-color: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
 
-    /* RESTORED: Visual Layer Stack (without animation) */
-    #layer-visual-stack {
-      display: flex;
-      flex-direction: column-reverse; /* Layer 7 at the top */
-      align-items: center;
-      gap: 4px;
-      margin: 20px 0 30px 0;
-      perspective: 1000px;
-    }
-    .visual-layer {
-      width: 280px;
-      padding: 10px;
-      background: rgba(46, 46, 78, 0.6);
-      border: 1px solid rgba(138, 138, 255, 0.3);
-      border-radius: 6px;
-      text-align: center;
-      font-weight: 600;
-      color: #d7d7ff;
-      backdrop-filter: blur(5px);
-    }
+        /* --- Footer --- */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 40px 0;
+            text-align: center;
+            background-color: var(--bg-secondary);
+        }
+        #footer-logo {
+            width: 80px;
+            height: auto;
+            margin-bottom: 16px;
+            opacity: 0.6;
+        }
+        footer p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
 
-    /* --- Difficulty Selection Styles --- */
-    .difficulty-options {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      margin: 30px 0;
-    }
+        /* --- Animations --- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-    .difficulty-btn {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 150px;
-      height: 150px;
-      background: linear-gradient(45deg, #2e2e4e, #4a4ad8);
-      border: 2px solid rgba(138, 138, 255, 0.3);
-      border-radius: 15px;
-      color: #fff;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-    }
+        /* --- Turnstile Container --- */
+        #turnstile-container {
+            margin-top: 10px;
+            min-height: 65px; /* Forces space so layout doesn't jump */
+            display: flex;
+            justify-content: center;
+        }
 
-    .difficulty-btn:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-      background: linear-gradient(45deg, #4a4ad8, #6a6af8);
-    }
-
-    .difficulty-title {
-      font-size: 1.5rem;
-      margin-bottom: 10px;
-    }
-
-    .difficulty-desc {
-      font-size: 1rem;
-      opacity: 0.8;
-    }
-
-    .back-btn {
-      display: block;
-      width: 180px;
-      margin: 20px auto 0;
-      padding: 12px 0;
-      background: transparent;
-      border: 2px solid #5b5bc8;
-      border-radius: 10px;
-      color: #5b5bc8;
-      font-weight: 700;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .back-btn:hover {
-      background: #5b5bc8;
-      color: #fff;
-    }
-
-    @media (max-width: 480px) {
-      .difficulty-options {
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      .difficulty-btn {
-        width: 200px;
-        height: 100px;
-        flex-direction: row;
-      }
-      
-      .difficulty-title {
-        font-size: 1.2rem;
-        margin-right: 15px;
-        margin-bottom: 0;
-      }
-    }
-  </style>
+    </style>
 </head>
 <body>
 
-  <!-- Start Page Container -->
-  <div id="start-page-container" class="game-container">
-    <h1 class="game-title">OSI Layer Quiz Game</h1>
-    <p style="text-align: center; font-size: 1.1rem; color: #b0c4de; margin-bottom: 30px;">
-      Journey through the 7 layers of the network.
-    </p>
+    <div class="ambient"></div>
+
+    <!-- Sound Wave Loading Screen -->
+    <div id="loading-screen">
+        <div class="sound-wave">
+            <div></div><div></div><div></div><div></div><div></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" style="display: none;">
+        
+        <!-- Header Section -->
+        <header id="home">
+            <nav>
+                <div class="container">
+                    <a href="#" id="scrollToTop" aria-label="Scroll to top">
+                        <!-- REPLACE WITH YOUR LOGO: <img src="./photos/ib_logos3.png" alt="Logo" id="logo-image" loading="lazy"> -->
+                        <span class="logo-text">ibsds</span>
+                    </a>
+                    <ul class="nav-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About Me</a></li>
+                        <li><a href="#experience">Experience</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                    <div class="hamburger" id="hamburger">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
+            </nav>
+            
+            <div class="header-content">
+                <div class="glitch-wrapper">
+                    <div class="glitch" data-text="Welcome">Welcome</div>
+                </div>
+                <p>I specialize in network and telecommunication systems</p>
+            </div>
+        </header>
+
+        <!-- About Me Section -->
+        <section id="about" class="section">
+            <div class="container reveal">
+                <div class="about-content">
+                    <h2>About Me</h2>
+                    <p>Network Field Technician with over 20 years of experience in managing and optimizing fiber optic and Transport networks.</p>
+                    <p>Track record in enhancing network performance and reliability, achieving a 25% reduction in network downtime and enhancing customer satisfaction scores by 15%.</p>
+                    <p>Adept in complex problem-solving, project management, and delivering results under pressure.</p>
+                </div>
+                
+                <div class="skills">
+                    <div class="skill">
+                        <div class="skill-inner">
+                            <div class="skill-front">
+                                <i class="fas fa-lightbulb"></i>
+                                <i class="fas fa-hand-pointer flip-hint"></i>
+                            </div>
+                            <div class="skill-back">
+                                <h3>Problem Solving &amp; Analysis</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-inner">
+                            <div class="skill-front">
+                                <i class="fas fa-clock"></i>
+                                <i class="fas fa-hand-pointer flip-hint"></i>
+                            </div>
+                            <div class="skill-back">
+                                <h3>Delivering Results on a Timely Manner</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-inner">
+                            <div class="skill-front">
+                                <i class="fas fa-network-wired"></i>
+                                <i class="fas fa-hand-pointer flip-hint"></i>
+                            </div>
+                            <div class="skill-back">
+                                <h3>Fiber Optic &amp; Copper Network Management</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-inner">
+                            <div class="skill-front">
+                                <i class="fas fa-signal"></i>
+                                <i class="fas fa-hand-pointer flip-hint"></i>
+                            </div>
+                            <div class="skill-back">
+                                <h3>Telecom IP Systems &amp; Optical Fiber Technologies</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-inner">
+                            <div class="skill-front">
+                                <i class="fas fa-wrench"></i>
+                                <i class="fas fa-hand-pointer flip-hint"></i>
+                            </div>
+                            <div class="skill-back">
+                                <h3>Troubleshooting Network Devices and Connectivity Issues</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-inner">
+                            <div class="skill-front">
+                                <i class="fas fa-tools"></i>
+                                <i class="fas fa-hand-pointer flip-hint"></i>
+                            </div>
+                            <div class="skill-back">
+                                <h3>Network Cabling and Test Equipment (VFL, Power Meter, OSA, OTDR, Network Analyzer)</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Work Experience Section -->
+        <section id="experience" class="section">
+            <div class="container reveal">
+                <h2>Work Experience</h2>
+                
+                <div class="timeline">
+                    <div class="timeline-item" onclick="toggleExperience(this)">
+                        <div class="timeline-content">
+                            <h3>Transport Network Engineer</h3>
+                            <h4>NOVA S.A., Athens, Greece</h4>
+                            <p class="date">Apr 2023 – Mar 2024</p>
+                            <div class="timeline-icon"><i class="fa-solid fa-angle-down"></i></div>
+                            <div class="experience-details">
+                                <div>Led the expansion of the fiber optic (FO) network and customer connections.</div>
+                                <div>Managed CRM work orders for network resource allocation, ensuring timely project tracking of FO network expansions &amp; HLD, LLD.</div>
+                                <div>Administered FO network inventory.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item" onclick="toggleExperience(this)">
+                        <div class="timeline-content">
+                            <h3>Fixed Delivery Technician</h3>
+                            <h4>Vodafone S.A. (Contract, Outsourcing)</h4>
+                            <p class="date">Oct 2020 – Apr 2023</p>
+                            <div class="timeline-icon"><i class="fa-solid fa-angle-down"></i></div>
+                            <div class="experience-details">
+                                <ul>
+                                    <li>Worked on the Public Sector Network "Syzefxis II" Project. Responsible for Fixed Telephony and Converged Telephony &amp; Internet Services activation.</li>
+                                    <li>Direct contact with Business Customers and field technicians.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item" onclick="toggleExperience(this)">
+                        <div class="timeline-content">
+                            <h3>Network Field Maintenance Operations Technician</h3>
+                            <h4>Wind S.A., L. Athinon, Greece</h4>
+                            <p class="date">Nov 2016 – Nov 2019</p>
+                            <div class="timeline-icon"><i class="fa-solid fa-angle-down"></i></div>
+                            <div class="experience-details">
+                                <ul>
+                                    <li>Supported Field and Fiber Optic Operations.</li>
+                                    <li>Responsible for telecom &amp; IP systems and fiber optic failures at Wind network.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item" onclick="toggleExperience(this)">
+                        <div class="timeline-content">
+                            <h3>Field Network Technician</h3>
+                            <h4>Neurosoft SA, N. Irakleio, Greece</h4>
+                            <p class="date">Jul 2014 – Nov 2016</p>
+                            <div class="timeline-icon"><i class="fa-solid fa-angle-down"></i></div>
+                            <div class="experience-details">
+                                <ul>
+                                    <li>Installer and commissioner technician for Telecom Systems.</li>
+                                    <li>Responsible for Optical systems installation, commissioning, and troubleshooting.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item" onclick="toggleExperience(this)">
+                        <div class="timeline-content">
+                            <h3>Field Network Technician</h3>
+                            <h4>Wavetel SA, Piraeus, Greece</h4>
+                            <p class="date">Nov 2013 – Jul 2014</p>
+                            <div class="timeline-icon"><i class="fa-solid fa-angle-down"></i></div>
+                            <div class="experience-details">
+                                <ul>
+                                    <li>Installer and commissioner technician for Telecom Systems (Nokia, Huawei).</li>
+                                    <li>Responsible for Optical systems installation, commissioning, and troubleshooting.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item" onclick="toggleExperience(this)">
+                        <div class="timeline-content">
+                            <h3>Field Network Technician</h3>
+                            <h4>All About Telecom Ltd, Athens, Greece</h4>
+                            <p class="date">Nov 2006 – Nov 2013</p>
+                            <div class="timeline-icon"><i class="fa-solid fa-angle-down"></i></div>
+                            <div class="experience-details">
+                                <ul>
+                                    <li>Installer and commissioner technician for Point-to-Point Microwave telecom Systems.</li>
+                                    <li>Responsible for Optical systems installation, commissioning, and troubleshooting.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item" onclick="toggleExperience(this)">
+                        <div class="timeline-content">
+                            <h3>Microwave and Network Technician</h3>
+                            <h4>Hitech SNT S.A., N. Ionia, Greece</h4>
+                            <p class="date">Oct 2004 – Nov 2006</p>
+                            <div class="timeline-icon"><i class="fa-solid fa-angle-down"></i></div>
+                            <div class="experience-details">
+                                <ul>
+                                    <li>Installer and commissioner technician on microwave network and telecom systems.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section">
+            <div class="container reveal">
+                <h2>Contact Me</h2>
+                <p>Feel free to reach out if you have any questions or opportunities!</p>
+                
+                <form id="contact-form" action="https://formcarry.com/s/qyBOLWyaumT" method="POST" enctype="multipart/form-data">
+                    <input type="text" name="name" placeholder="Your Name" required aria-label="Your Name" autocomplete="name">
+                    <input type="email" name="email" placeholder="Your Email" required aria-label="Your Email" autocomplete="email">
+                    <textarea name="message" rows="5" placeholder="Your Message" required aria-label="Your Message"></textarea>
+                    
+                    <!-- Cloudflare Turnstile Container -->
+                    <div id="turnstile-container" class="cf-turnstile" data-sitekey="0x4AAAAAAAzTzAB7Q_8oAEFm" data-callback="javascriptCallback"></div>
+                    
+                    <button type="submit" class="btn">Send Message</button>
+                </form>
+                
+                <div class="contact-info">
+                    <a href="https://www.linkedin.com/in/your-linkedin" class="social-btn" target="_blank" rel="noopener noreferrer" aria-label="Visit my LinkedIn profile">
+                        <i class="fab fa-linkedin"></i> LinkedIn
+                    </a>
+                    <a href="https://www.credly.com/users/xxxxx-user" class="social-btn" target="_blank" rel="noopener noreferrer">
+                        <i class="fa-regular fa-folder-open"></i> Credly
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Section -->
+        <footer>
+            <div class="container">
+                <!-- REPLACE WITH YOUR LOGO: <img src="photos/ib_logos3.png" alt="Logo" id="footer-logo"> -->
+                <p>&copy; 2025 ibsds. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- CLOUDFLARE TURNSTABLE SCRIPT (Placed correctly at the bottom) -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     
-    <!-- Visual representation of the layers -->
-    <div id="layer-visual-stack">
-      <div class="visual-layer">Layer 7 - Application</div>
-      <div class="visual-layer">Layer 6 - Presentation</div>
-      <div class="visual-layer">Layer 5 - Session</div>
-      <div class="visual-layer">Layer 4 - Transport</div>
-      <div class="visual-layer">Layer 3 - Network</div>
-      <div class="visual-layer">Layer 2 - Data Link</div>
-      <div class="visual-layer">Layer 1 - Physical</div>
-    </div>
-
-    <button id="startGameBtn">Start Game</button>
-  </div>
-
-  <!-- Difficulty Selection Container -->
-  <div id="difficulty-container" class="game-container hidden">
-    <h1 class="game-title">Select Difficulty</h1>
-    <p style="text-align: center; font-size: 1.1rem; color: #b0c4de; margin-bottom: 30px;">
-      Choose your challenge level:
-    </p>
-    
-    <div class="difficulty-options">
-      <button class="difficulty-btn" data-questions="3">
-        <span class="difficulty-title">Easy</span>
-        <span class="difficulty-desc">3 Questions</span>
-      </button>
-      <button class="difficulty-btn" data-questions="6">
-        <span class="difficulty-title">Medium</span>
-        <span class="difficulty-desc">6 Questions</span>
-      </button>
-      <button class="difficulty-btn" data-questions="11">
-        <span class="difficulty-title">Hard</span>
-        <span class="difficulty-desc">11 Questions</span>
-      </button>
-    </div>
-    
-    <button id="backToStartBtn" class="back-btn">Back to Start</button>
-  </div>
-
-  <!-- Game Container is now hidden by default -->
-  <div id="game-container" class="game-container hidden">
-    <h1 class="game-title">OSI Layer Quiz Game</h1>
-    <div id="questionNumber"></div>
-    <div class="progress-container" id="progressContainer"></div>
-    <div class="progress-legend" id="progressLegend">
-      <div class="progress-legend-item"><div class="legend-dot" style="background-color: #3c3c3c;"></div>Unanswered</div>
-      <div class="progress-legend-item"><div class="legend-dot" style="background-color: #5b5bc8;"></div>Current</div>
-      <div class="progress-legend-item"><div class="legend-dot" style="background-color: #28a745;"></div>Correct</div>
-      <div class="progress-legend-item"><div class="legend-dot" style="background-color: #dc3545;"></div>Incorrect</div>
-    </div>
-    <div id="question"></div>
-    <ul class="OSI-Layers">
-      <li data-layer="1" tabindex="0">Layer 1 - Physical</li>
-      <li data-layer="2" tabindex="0">Layer 2 - Data Link</li>
-      <li data-layer="3" tabindex="0">Layer 3 - Network</li>
-      <li data-layer="4" tabindex="0">Layer 4 - Transport</li>
-      <li data-layer="5" tabindex="0">Layer 5 - Session</li>
-      <li data-layer="6" tabindex="0">Layer 6 - Presentation</li>
-      <li data-layer="7" tabindex="0">Layer 7 - Application</li>
-    </ul>
-    <div id="feedback" aria-live="polite"></div>
-    <div id="score" aria-live="polite"></div>
-    <div id="highScore" aria-live="polite"></div>
-    <div id="timer">Time remaining: 15s</div>
-    <div id="timerBar">
-      <div id="timerProgress" style="width: 100%;"></div>
-    </div>
-    
-    <!-- Game Controls Container -->
-    <div class="game-controls-container">
-      <button id="backToDifficultyBtn">Back</button>
-      <button id="restartBtn">Restart</button>
-    </div>
-  </div>
-
-  <div class="confetti-container" id="confettiContainer"></div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const allQuestions = [
-        { question: "Which layer is responsible for physical transmission?", answer: "1" },
-        { question: "Which layer ensures error-free data transfer?", answer: "2" },
-        { question: "Which layer handles routing?", answer: "3" },
-        { question: "Which layer ensures reliable delivery?", answer: "4" },
-        { question: "Which layer manages sessions?", answer: "5" },
-        { question: "Which layer handles translation and encryption?", answer: "6" },
-        { question: "Which layer interacts with software apps?", answer: "7" },
-        { question: "Where does IP addressing occur?", answer: "3" },
-        { question: "Where does MAC addressing occur?", answer: "2" },
-        { question: "Where does segmentation happen?", answer: "4" },
-        { question: "Which layer deals with bitstream transmission?", answer: "1" },
-      ];
-
-      let questions = [];
-      let currentQuestion = 0;
-      let correctAnswers = 0;
-      let baseTime = 15;
-      let timerSpeedFactor = 1;
-      let questionAnswered = false;
-      let gameOver = false;
-      let highScore = 0;
-      let questionResults = []; // Store true for correct, false for incorrect
-
-      // Variables for difficulty
-      let totalQuestions = 11; // Default to hard mode
-      let difficultyLevel = "Hard";
-
-      let startTime = 0;
-      let timerInterval;
-
-      // Get element selectors
-      const startPageContainer = document.getElementById("start-page-container");
-      const difficultyContainer = document.getElementById("difficulty-container");
-      const gameContainer = document.getElementById("game-container");
-      const startGameBtn = document.getElementById("startGameBtn");
-      const difficultyBtns = document.querySelectorAll(".difficulty-btn");
-      const backToStartBtn = document.getElementById("backToStartBtn");
-      const backToDifficultyBtn = document.getElementById("backToDifficultyBtn");
-      
-      const questionNumberEl = document.getElementById("questionNumber");
-      const questionEl = document.getElementById("question");
-      const feedbackEl = document.getElementById("feedback");
-      const scoreEl = document.getElementById("score");
-      const highScoreEl = document.getElementById("highScore");
-      const timerEl = document.getElementById("timer");
-      const timerProgressEl = document.getElementById("timerProgress");
-      const restartBtn = document.getElementById("restartBtn");
-      const layerLis = document.querySelectorAll(".OSI-Layers li");
-      const confettiContainer = document.getElementById("confettiContainer");
-      const progressContainer = document.getElementById("progressContainer");
-      const progressLegend = document.getElementById("progressLegend");
-
-      function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [array[i], array[j]] = [array[j], array[i]];
-        }
-      }
-
-      function initializeProgressDots() {
-        progressContainer.innerHTML = "";
-        for (let i = 0; i < questions.length; i++) {
-          const dot = document.createElement("div");
-          dot.className = "progress-dot";
-          progressContainer.appendChild(dot);
-        }
-        updateProgressDots();
-      }
-
-      function updateProgressDots() {
-        const dots = progressContainer.querySelectorAll(".progress-dot");
-        dots.forEach((dot, index) => {
-          dot.classList.remove("active", "completed", "incorrect");
-          if (index < currentQuestion) {
-            if (questionResults[index] === true) {
-              dot.classList.add("completed");
-            } else {
-              dot.classList.add("incorrect");
-            }
-          } else if (index === currentQuestion) {
-            dot.classList.add("active");
-          }
+    <script>
+        // --- Loading Screen ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loading-screen');
+                loader.classList.add('hide');
+                setTimeout(() => loader.style.display = 'none', 600);
+                document.getElementById('main-content').style.display = 'block';
+            }, 1500);
         });
-      }
 
-      function loadQuestion() {
-        if (gameOver) return;
-        
-        // FIX: Added a safety check to prevent errors if a question is missing.
-        if (!questions[currentQuestion]) {
-          console.error("Question not found! Ending game to prevent crash.");
-          gameOver = true;
-          showFinalScore();
-          return;
-        }
-
-        questionAnswered = false;
-        clearSelection();
-        removeCorrectHighlight();
-
-        questionNumberEl.innerText = `Question ${currentQuestion + 1}/${questions.length}`;
-        questionEl.innerText = questions[currentQuestion].question;
-        feedbackEl.innerHTML = "";
-        feedbackEl.className = "";
-        enableLayers(true);
-
-        startTime = Date.now();
-        
-        // Adjust base time based on difficulty
-        let adjustedBaseTime = baseTime;
-        if (totalQuestions === 3) {
-          adjustedBaseTime = 20; // More time for easy mode
-        } else if (totalQuestions === 6) {
-          adjustedBaseTime = 18; // Slightly more time for medium mode
-        }
-
-        updateTimerDisplay(adjustedBaseTime);
-        startTimer(adjustedBaseTime);
-        
-        updateProgressDots();
-      }
-
-      function updateTimerDisplay(customBaseTime) {
-        const elapsedMs = Date.now() - startTime;
-        const baseTimeToUse = customBaseTime || baseTime;
-        let timeLeft = Math.ceil(baseTimeToUse * timerSpeedFactor - elapsedMs / 1000);
-
-        if (timeLeft < 0) timeLeft = 0;
-
-        timerEl.innerText = `Time remaining: ${timeLeft}s`;
-        const progressWidth = (timeLeft / (baseTimeToUse * timerSpeedFactor)) * 100;
-        timerProgressEl.style.width = progressWidth + "%";
-
-        return timeLeft;
-      }
-
-      function startTimer(customBaseTime) {
-        clearInterval(timerInterval);
-        const baseTimeToUse = customBaseTime || baseTime;
-        timerInterval = setInterval(() => {
-          const timeLeft = updateTimerDisplay(baseTimeToUse);
-          if (timeLeft <= 0 && !questionAnswered) {
-            clearInterval(timerInterval);
-            questionAnswered = true;
-            questionResults.push(false); // Record as incorrect
-            showFeedback(false, "Time's up! Moving to next question.", true);
-            enableLayers(false);
-            setTimeout(nextQuestion, 2000);
-          }
-        }, 200);
-      }
-
-      function showFeedback(isCorrect, message, highlightCorrect = false) {
-        feedbackEl.className = isCorrect ? "correct-feedback animated" : "incorrect-feedback animated";
-        feedbackEl.innerText = message;
-
-        if (highlightCorrect) {
-          highlightCorrectAnswer();
-        }
-      }
-
-      // Update score to show percentage
-      function updateScore() {
-        const percentage = questions.length > 0 ? 
-          Math.round((correctAnswers / questions.length) * 100) : 0;
-        
-        scoreEl.innerText = `Correct Answers: ${correctAnswers}/${questions.length} (${percentage}%)`;
-        highScoreEl.innerText = `High Score: ${highScore}`;
-      }
-
-      function getHighScore() {
-        return parseInt(localStorage.getItem("osiQuizHighScore") || "0", 10);
-      }
-
-      function saveHighScore(score) {
-        const currentHigh = getHighScore();
-        if (score > currentHigh) {
-          localStorage.setItem("osiQuizHighScore", score.toString());
-          return true;
-        }
-        return false;
-      }
-
-      function nextQuestion() {
-        currentQuestion++;
-        if (currentQuestion >= questions.length) {
-          gameOver = true;
-          showFinalScore();
-        } else {
-          loadQuestion();
-        }
-      }
-
-      // FIX: Updated final score logic to show confetti for a perfect score
-      function showFinalScore() {
-        clearInterval(timerInterval);
-        questionNumberEl.innerText = "Quiz Complete!";
-        
-        const percentage = Math.round((correctAnswers / questions.length) * 100);
-        questionEl.innerText = 
-          `Your final score: ${correctAnswers} out of ${questions.length} (${percentage}%)`;
-        
-        const isNewHighScore = saveHighScore(correctAnswers);
-        highScore = getHighScore();
-        updateScore();
-        
-        progressLegend.style.display = "none"; // Hide legend at the end
-        updateProgressDots(); // Update dots to show final results
-
-        // FIX: Trigger confetti for a new high score OR a perfect score (100%)
-        if (isNewHighScore) {
-          feedbackEl.innerText = "Congratulations! You've set a new high score!";
-          feedbackEl.className = "correct-feedback animated new-high-score";
-          createConfetti();
-        } else if (percentage === 100) {
-          feedbackEl.innerText = "Perfect score! Well done!";
-          feedbackEl.className = "correct-feedback animated new-high-score"; // Use same styling for celebration
-          createConfetti();
-        } else {
-          feedbackEl.innerText = "Click Restart to play again.";
-          feedbackEl.className = "";
-        }
-
-        enableLayers(false);
-      }
-
-      function enableLayers(enabled) {
-        layerLis.forEach(li => {
-          li.style.pointerEvents = enabled ? "auto" : "none";
-          li.setAttribute("aria-disabled", !enabled);
-          li.tabIndex = enabled ? 0 : -1;
-        });
-      }
-
-      function clearSelection() {
-        layerLis.forEach(li => li.classList.remove("selected"));
-      }
-
-      function highlightCorrectAnswer() {
-        const correctLayer = questions[currentQuestion].answer;
-        layerLis.forEach(li => {
-          if (li.getAttribute("data-layer") === correctLayer) {
-            li.classList.add("correct-answer");
-          }
-        });
-      }
-
-      function removeCorrectHighlight() {
-        layerLis.forEach(li => li.classList.remove("correct-answer"));
-      }
-
-      // FIX: Updated createConfetti function for a smoother animation
-      function createConfetti() {
-        confettiContainer.style.display = 'block';
-        confettiContainer.innerHTML = '';
-        
-        const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', 
-                        '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4CAF50', 
-                        '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800'];
-        
-        for (let i = 0; i < 150; i++) { // Increased from 100 to 150
-          const confetti = document.createElement('div');
-          confetti.className = 'confetti';
-          confetti.style.left = Math.random() * 100 + '%';
-          confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-          confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
-          confetti.style.opacity = Math.random();
-          confettiContainer.appendChild(confetti);
-        }
-        
-        // FIX: Increased timeout to ensure all animations can finish
-        setTimeout(() => {
-          confettiContainer.style.display = 'none';
-        }, 6000); // Increased from 5000 to 6000ms
-      }
-
-      function handleAnswer(layerNumber, liElement) {
-        if (questionAnswered || gameOver) return;
-        questionAnswered = true;
-        clearInterval(timerInterval);
-
-        const isCorrect = (layerNumber === questions[currentQuestion].answer);
-        questionResults.push(isCorrect);
-
-        if (isCorrect) {
-          correctAnswers++;
-          showFeedback(true, "Correct! 🎉");
-          timerSpeedFactor = Math.max(0.7, timerSpeedFactor - 0.1);
-        } else {
-          showFeedback(false, `Incorrect. The correct answer was Layer ${questions[currentQuestion].answer}.`, true);
-          timerSpeedFactor = Math.min(1.5, timerSpeedFactor + 0.2);
-        }
-        updateScore();
-        enableLayers(false);
-        liElement.classList.add("selected");
-        setTimeout(nextQuestion, 2000);
-      }
-
-      // Function to show difficulty selection
-      function showDifficultySelection() {
-        startPageContainer.classList.add("hidden");
-        difficultyContainer.classList.remove("hidden");
-        gameContainer.classList.add("hidden");
-      }
-
-      // Function to handle difficulty selection
-      function selectDifficulty(numQuestions) {
-        totalQuestions = numQuestions;
-        
-        // Set difficulty level text based on number of questions
-        if (numQuestions === 3) {
-          difficultyLevel = "Easy";
-        } else if (numQuestions === 6) {
-          difficultyLevel = "Medium";
-        } else {
-          difficultyLevel = "Hard";
-        }
-        
-        // Show the game with the selected difficulty
-        difficultyContainer.classList.add("hidden");
-        gameContainer.classList.remove("hidden");
-        startGame();
-      }
-
-      // The startGame function now uses the selected number of questions
-      function startGame() {
-        clearInterval(timerInterval);
-        
-        // FIX: Shuffle the entire pool of questions first, then take a slice.
-        const shuffledAllQuestions = [...allQuestions];
-        shuffleArray(shuffledAllQuestions);
-        questions = shuffledAllQuestions.slice(0, totalQuestions);
-        
-        currentQuestion = 0;
-        correctAnswers = 0;
-        gameOver = false;
-        timerSpeedFactor = 1;
-        questionResults = []; // Reset results
-        highScore = getHighScore();
-        updateScore();
-        initializeProgressDots();
-        loadQuestion();
-        feedbackEl.innerText = "";
-        confettiContainer.style.display = "none";
-        progressLegend.style.display = "flex"; // Show legend at the start
-        
-        // Update the game title to show difficulty
-        document.querySelector("#game-container .game-title").innerText = 
-          `OSI Layer Quiz - ${difficultyLevel}`;
-      }
-
-      layerLis.forEach(li => {
-        li.addEventListener("click", () => {
-          if (li.classList.contains("disabled")) return;
-          const layerNum = li.getAttribute("data-layer");
-          handleAnswer(layerNum, li);
-        });
-        li.addEventListener("keydown", e => {
-          if ((e.key === "Enter" || e.key === " ") && !li.classList.contains("disabled")) {
+        // --- Scroll to top & Refresh ---
+        window.addEventListener('load', () => setTimeout(() => window.scrollTo(0, 0), 0));
+        document.getElementById('scrollToTop').addEventListener('click', (e) => {
             e.preventDefault();
-            const layerNum = li.getAttribute("data-layer");
-            handleAnswer(layerNum, li);
-          }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
-      });
 
-      // Event listeners
-      startGameBtn.addEventListener("click", showDifficultySelection);
-
-      difficultyBtns.forEach(btn => {
-        btn.addEventListener("click", () => {
-          const numQuestions = parseInt(btn.getAttribute("data-questions"));
-          selectDifficulty(numQuestions);
+        // --- Smooth Scroll & Nav Close ---
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if(target) target.scrollIntoView({ behavior: 'smooth' });
+                document.querySelector('.nav-links').classList.remove('active');
+                document.getElementById('hamburger').classList.remove('active');
+            });
         });
-      });
 
-      backToStartBtn.addEventListener("click", () => {
-        difficultyContainer.classList.add("hidden");
-        startPageContainer.classList.remove("hidden");
-      });
+        // --- Hamburger Toggle ---
+        document.getElementById('hamburger').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+        
+        // Close menu on outside click
+        window.addEventListener('click', (e) => {
+            const nav = document.querySelector('.nav-links');
+            const ham = document.getElementById('hamburger');
+            if (!nav.contains(e.target) && !ham.contains(e.target)) {
+                nav.classList.remove('active');
+                ham.classList.remove('active');
+            }
+        });
 
-      // Event listener for the new Back button
-      backToDifficultyBtn.addEventListener("click", () => {
-        clearInterval(timerInterval); // Stop the timer
-        gameContainer.classList.add("hidden");
-        showDifficultySelection();
-      });
+        // --- Active Nav Link Highlight ---
+        const sections = document.querySelectorAll("section");
+        const navLinks = document.querySelectorAll(".nav-links a");
+        window.addEventListener("scroll", () => {
+            let current = "";
+            sections.forEach((section) => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - section.clientHeight / 3) {
+                    current = section.getAttribute("id");
+                }
+            });
+            navLinks.forEach((link) => {
+                link.classList.remove("active");
+                if (link.getAttribute("href").includes(current)) {
+                    link.classList.add("active");
+                }
+            });
+        });
 
-      // The "Restart" button now restarts the same game
-      restartBtn.addEventListener("click", () => {
-        startGame();
-      });
+        // --- Timeline Toggle ---
+        function toggleExperience(element) {
+            const isExpanded = element.classList.contains('expanded');
+            document.querySelectorAll('.timeline-item.expanded').forEach(el => el.classList.remove('expanded'));
+            if (!isExpanded) element.classList.add('expanded');
+        }
 
-      // Initial UI setup for the hidden game container
-      questionNumberEl.innerText = "";
-      questionEl.innerText = "Click Start to begin the OSI Layer Quiz!";
-      feedbackEl.innerText = "";
-      scoreEl.innerText = "";
-      highScoreEl.innerText = "";
-      timerEl.innerText = "";
-      timerProgressEl.style.width = "0%";
-      enableLayers(false);
-      highScore = getHighScore();
-      updateScore();
-      progressLegend.style.display = "none"; // Hide legend initially
-    });
-  </script>
+        // --- Flip Cards ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.skill').forEach(skill => {
+                skill.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('flip-hint')) return;
+                    skill.classList.toggle('flipped');
+                });
+            });
+        });
+
+        // --- Reveal on Scroll ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- Cloudflare Turnstile Init ---
+        window.onloadTurnstileCallback = function () {
+            if (typeof turnstile !== 'undefined') {
+                turnstile.render("#turnstile-container", {
+                    sitekey: "0x4AAAAAAAzTzAB7Q_8oAEFm",
+                    callback: function (token) {
+                        console.log(`Challenge Success ${token}`);
+                    },
+                });
+            }
+        };
+    </script>
 </body>
 </html>
